@@ -55,7 +55,7 @@ class AuthUsersClient(SoapClient):
     """
 
     def __init__(self, wsdl_url):
-        super(AuthClient, self).__init__(wsdl_url)
+        super(AuthUsersClient, self).__init__(wsdl_url)
 
     def create_user(self, token, username, password, email, description,
                     project_ID):
@@ -105,7 +105,7 @@ class AuthProjectsClient(SoapClient):
     """
 
     def __init__(self, wsdl_url):
-        super(AuthClient, self).__init__(wsdl_url)
+        super(AuthProjectsClient, self).__init__(wsdl_url)
 
     def list_projects(self, token):
         return self.method_call('listProjects', [token])
