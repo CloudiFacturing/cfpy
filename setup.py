@@ -6,5 +6,5 @@ setup(name='cfpy',
       author='Robert Schittny',
       author_email='robert.schittny@sintef.no',
       packages=['cfpy'],
-      install_requires=['suds_jurko'],
+      install_requires=['requests', 'suds_jurko'],
       zip_safe=False)

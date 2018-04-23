@@ -1,6 +1,6 @@
 """Lightweight SOAP client to communicate with GSS"""
 import os
-import urllib2
+import requests
 
 from cfpy import SoapClient
 
@@ -63,14 +63,11 @@ class GssClient(SoapClient):
 
         headers = {h.key: h.value for h in read_desc.headers}
 
-        request = urllib2.Request(url=read_desc.url, headers=headers)
+        method = get_reqmethod(read_desc.httpMethod)
+        response = method(read_desc.url, headers=headers, stream=True)
         with open(out_filename, 'wb') as out_file:
-            result = urllib2.urlopen(request)
-            while True:
-                buffer = result.read()
-                if not buffer:
-                    break
-                out_file.write(buffer)
+            for chunk in response.iter_content(chunk_size=128):
+                out_file.write(chunk)
 
     def upload(self, gss_ID, session_token, in_filename):
         """Uploads from a file to a new, nonexisting GSS ID."""
@@ -101,13 +98,11 @@ class GssClient(SoapClient):
         headers["Content-Length"] = "%d" % os.stat(in_filename).st_size
 
         with open(in_filename, "r") as in_file:
-            request = urllib2.Request(url=req_desc.url, data=in_file,
-                                      headers=headers)
-            request.get_method = lambda: req_desc.httpMethod
-            result = urllib2.urlopen(request)
+            method = get_reqmethod(req_desc.httpMethod)
+            response = method(req_desc.url, headers=headers, data=in_file)
 
         if res_info.queryForName:
-            return result.info()["filename"]
+            return response.headers["filename"]
         else:
             return gss_ID
 
@@ -121,8 +116,11 @@ class GssClient(SoapClient):
 
         headers = {h.key: h.value for h in delete_desc.headers}
 
-        request = urllib2.Request(url=delete_desc.url, headers=headers)
-        request.get_method = lambda: delete_desc.httpMethod
-        result = urllib2.urlopen(request)
+        method = get_reqmethod(delete_desc.httpMethod)
+        response = method(delete_desc.url, headers=headers)
 
-        return result
+        return response.text
+
+
+def get_reqmethod(http_method):
+    return getattr(requests, http_method.lower())

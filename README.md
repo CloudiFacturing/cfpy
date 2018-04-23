@@ -12,10 +12,7 @@ Currently, the following clients are available:
 * `cfpy.GssClient`: Client for accessing the generic storage services (GSS)
 
 ## Requirements
-Requires Python 2.7 (so that it can be used together with the Python spyne
-library inside Python webservices).
-
-Does not work with Python 3.x.
+Requires Python 2.7 or Python 3.x.
 
 ## Installation
 Download library and install using pip (from the directory containing this
@@ -23,6 +20,7 @@ readme):
 ```
 pip install -e .
 ```
+This will install the necessary dependencies
 
 ## How to use
 Have a look at the `cfpy/tests/` folder to find examples on how to use the library.
