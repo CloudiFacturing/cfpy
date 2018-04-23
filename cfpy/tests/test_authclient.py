@@ -3,10 +3,10 @@ from contextlib import contextmanager
 import time
 import cfpy
 
-auth_url = "https://caxman.clesgo.net/sintef/auth/authManager/AuthManager?wsdl"
-username = ???
-project = 'caxman'
-password = ???
+auth_url = "https://api.hetcomp.org/authManager/AuthManager?wsdl"
+username = "???"
+project = 'cloudifacturing'
+password = "???"
 
 @contextmanager
 def timeit_context(name):
