@@ -97,7 +97,7 @@ class GssClient(SoapClient):
         headers = {h.key: h.value for h in req_desc.headers}
         headers["Content-Length"] = "%d" % os.stat(in_filename).st_size
 
-        with open(in_filename, "r") as in_file:
+        with open(in_filename, "rb") as in_file:
             method = get_reqmethod(req_desc.httpMethod)
             response = method(req_desc.url, headers=headers, data=in_file)
 
