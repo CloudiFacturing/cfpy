@@ -14,6 +14,8 @@ Currently, the following clients are available:
 * `cfpy.GssClient`: Client for accessing the generic storage services (GSS)
 * `cfpy.HpcImagesClient`: Client for registering Singularity images with the
   CloudFlow HPC client
+* `cfpy.WfmClient`: Client for interacting with the workflow manager (does not
+  yet expose the full WFM functionality)
 
 ## Requirements
 Requires Python 2.7 or Python 3.x.
