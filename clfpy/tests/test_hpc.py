@@ -3,7 +3,7 @@ import os
 import filecmp
 import json
 
-import cfpy as cf
+import clfpy as cf
 
 auth_url = "https://api.hetcomp.org/authManager/AuthManager?wsdl"
 hpc_url = "https://api.hetcomp.org/hpc_anselm/Images?wsdl"

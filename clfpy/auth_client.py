@@ -1,5 +1,5 @@
 """Lightweight SOAP client to communicate with the authentication manager"""
-from cfpy import SoapClient
+from clfpy import SoapClient
 
 
 class AuthClient(SoapClient):

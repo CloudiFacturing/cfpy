@@ -1,10 +1,17 @@
 from setuptools import setup
 
-setup(name='cfpy',
-      version='0.1',
+setup(name='clfpy',
+      version='0.5.0',
       description='Library for accessing infrastructure services in CloudFlow and its derivatives',
+      url='https://github.com/CloudiFacturing/cfpy',
       author='Robert Schittny',
       author_email='robert.schittny@sintef.no',
-      packages=['cfpy'],
+      classifiers=[
+          'Development Status :: 4 - Beta',
+          'Programming Language :: Python :: 2.7',
+          'Programming Language :: Python :: 3',
+      ],
+      packages=['clfpy'],
       install_requires=['requests', 'suds_jurko'],
-      zip_safe=False)
+      python_requires='>=2.7, <4',
+)

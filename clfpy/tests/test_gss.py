@@ -2,7 +2,7 @@
 import os
 import filecmp
 
-import cfpy as cf
+import clfpy as cf
 
 auth_url = "https://api.hetcomp.org/authManager/AuthManager?wsdl"
 gss_url = "https://api.hetcomp.org/gss-0.1/FileUtilities?wsdl"

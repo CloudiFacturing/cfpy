@@ -1,5 +1,5 @@
 """Lightweight SOAP client to communicate with the HPC service"""
-from cfpy import SoapClient
+from clfpy import SoapClient
 
 
 class HpcImagesClient(SoapClient):

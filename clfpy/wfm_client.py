@@ -1,5 +1,5 @@
 """Lightweight SOAP client to communicate with the workflow manager"""
-from cfpy import SoapClient
+from clfpy import SoapClient
 
 
 class WfmClient(SoapClient):

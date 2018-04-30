@@ -2,7 +2,7 @@
 import os
 import requests
 
-from cfpy import SoapClient
+from clfpy import SoapClient
 
 
 class GssClient(SoapClient):

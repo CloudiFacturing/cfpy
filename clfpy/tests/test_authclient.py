@@ -1,7 +1,7 @@
 """Ugly but working hard-coded test script for the AuthManager client"""
 from contextlib import contextmanager
 import time
-import cfpy
+import clfpy
 
 auth_url = "https://api.hetcomp.org/authManager/AuthManager?wsdl"
 username = "???"
@@ -18,7 +18,7 @@ def timeit_context(name):
 
 
 def main():
-    auth = cfpy.AuthClient(auth_url, )
+    auth = clfpy.AuthClient(auth_url, )
     with timeit_context("get_session_token"):
         session_token = auth.get_session_token(username, project, password)
 
