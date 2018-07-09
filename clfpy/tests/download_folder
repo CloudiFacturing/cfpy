@@ -1,0 +1,102 @@
+#!/usr/bin/env python3
+
+"""
+Script for downloading an entire folder
+
+Usage: download_folder FOLDER DESTINATION
+
+  FOLDER       the folder to be downloaded
+  DESTINATION  the local destination folder
+
+  username, project and password must be specified in environment variables
+    CFG_USERNAME, CFG_PASSWORD, CFG_PROJECT
+
+"""
+
+import clfpy as cf
+import os
+import os.path
+import sys
+
+auth_url = "https://api.hetcomp.org/authManager/AuthManager?wsdl"
+gss_url = "https://api.hetcomp.org/gss-0.1/FileUtilities?wsdl"
+
+def scan_gss_tree(gss_tree,gss,session_token):
+    gss_dirlist= [gss_tree]
+    gss_filelist = []
+    scanned_folders = 0
+    while scanned_folders is not len(gss_dirlist):
+        for i in range(scanned_folders, len(gss_dirlist)):
+            scan_gss_folder(gss_dirlist[i], gss, gss_filelist, gss_dirlist, session_token)
+            scanned_folders += 1
+    return gss_dirlist, gss_filelist
+
+def scan_gss_folder(gss_path,gss,gss_filelist,gss_dirlist,session_token):
+    content = gss.list_files_minimal(gss_path, session_token)
+    for c in content:
+        if 'FOLDER' in c['type']:
+            gss_dirlist.append(c['uniqueName'])
+        if 'FILE' in c['type']:
+            gss_filelist.append(c['uniqueName'])
+    return
+
+def main():
+
+    try:
+        username = os.environ['CFG_USERNAME']
+        password = os.environ['CFG_PASSWORD']
+        project = os.environ['CFG_PROJECT']
+    except KeyError:
+        print("CFG_USERNAME, CFG_PASSWORD and CFG_PROJECT environment variables \
+are not defined.")
+        username = input("Please enter the username: ")
+        password = input("Please enter the password: ")
+        project = input("Please enter the project: ")
+
+    print("Obtaining session token ...")
+    auth = cf.AuthClient(auth_url)
+    session_token = auth.get_session_token(username, project, password)
+    if "Server raised fault" in str(auth.get_token_info(session_token)):
+        print("Autentication failed")
+        return
+    print("Autentication complete")
+
+    gss = cf.GssClient(gss_url)
+    if not gss.contains_file(sys.argv[1], session_token):
+        print("Remote folder {} does not exists".format(sys.argv[1]))
+        return
+    if not os.path.isdir(os.path.abspath(sys.argv[2])):
+        print("Local folder {} does not exists.".format(sys.argv[2]))
+        return
+
+    gss_dirlist, gss_filelist = scan_gss_tree(sys.argv[1], gss, session_token)
+
+    old_base=""
+    list_toks = sys.argv[1].split(sep="/")
+    for l in list_toks[:-1]:
+        old_base += l
+        old_base += "/"
+    new_base = os.path.abspath(sys.argv[2])
+    if new_base[-1] is not "/":
+        new_base += "/"
+
+    dirlist =  [d.replace(old_base,new_base) for d in gss_dirlist]
+    filedict = { f : f.replace(old_base,new_base) for f in gss_filelist}
+
+    print("Creating local folders...")
+    try:
+        for d in dirlist:
+            os.mkdir(d)
+        print("Downloading files...")
+        for gss_file, local_file in filedict.items():
+            print(local_file)
+            gss.download_to_file(gss_file, session_token, local_file)
+    except FileExistsError:
+            print("Local file or folder already existing")
+
+    return
+
+
+
+if __name__ == "__main__":
+    main()
