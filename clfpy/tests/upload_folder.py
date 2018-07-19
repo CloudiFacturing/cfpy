@@ -6,18 +6,22 @@ Script for uploading an entire folder
 Usage: update_folder FOLDER DESTINATION
 
   FOLDER       the folder to be uploaded, absolute or relative path
-  DESTINATION  the gss destination, which must exist before  (e.g. it4i_anselm://
-               or it4i_salomon://destination_folder/)
+  DESTINATION  the gss destination, which must exist before
+               (e.g. it4i_salomon://destination/path/)
 
   username, project and password must be specified in environment variables
     CFG_USERNAME, CFG_PASSWORD, CFG_PROJECT
 
 """
 
-import clfpy as cf
 import os
 import os.path
 import sys
+#### horrible workaround to find the modified version of gss client
+#### has to be changed whnen testin locally
+sys.path.insert(0, '/home/leo/cfg/clfpy')
+#### end of the horrible workaround, remove when clfpy is upgraded
+import clfpy as cf
 
 auth_url = "https://api.hetcomp.org/authManager/AuthManager?wsdl"
 gss_url = "https://api.hetcomp.org/gss-0.1/FileUtilities?wsdl"
@@ -47,28 +51,8 @@ are not defined.")
         return
     print("Autentication complete")
 
-    dirlist = [os.path.join(root,dir) for root,dirs,__ in os.walk(os.path.abspath(sys.argv[1]))
-            for dir in dirs]
-    filelist = [os.path.join(root,file) for root,__,files in os.walk(os.path.abspath(sys.argv[1]))
-            for file in files]
-    dirlist.append(os.path.abspath(sys.argv[1]))
-
-    old_base = os.path.dirname(os.path.abspath(sys.argv[1])) + '/'
-    new_base = sys.argv[2]
-    if new_base[-1] is not "/":
-        new_base += "/"
-
-    gss_dirlist =  [d.replace(old_base,new_base) for d in dirlist]
-    gss_filedict = { f : f.replace(old_base,new_base) for f in filelist}
-    gss_dirlist.sort()
-
     gss = cf.GssClient(gss_url)
-    print("Creating remote folders...")
-    for gss_dir in gss_dirlist:
-        gss.create_folder(gss_dir, session_token)
-    print("Uploading files...")
-    for local_file, gss_file in gss_filedict.items():
-        print(gss.upload(gss_file, session_token, local_file))
+    gss.upload_folder(sys.argv[2], session_token, sys.argv[1])
 
 if __name__ == "__main__":
     main()

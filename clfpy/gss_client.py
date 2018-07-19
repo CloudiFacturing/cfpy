@@ -170,6 +170,30 @@ class GssClient(SoapClient):
                 print("Local file or folder already exists")
         return
 
+    def upload_folder(self, gss_tree, session_token, in_foldername):
+        """ Uploads from a local folder to a new, nonexisting GSS ID. """
+        dirlist = [os.path.join(root,dir) for root,dirs,__ in os.walk(os.path.abspath(in_foldername))
+                for dir in dirs]
+        filelist = [os.path.join(root,file) for root,__,files in os.walk(os.path.abspath(in_foldername))
+                for file in files]
+        dirlist.append(os.path.abspath(in_foldername))
+        local_base = ""
+        for l in os.path.abspath(in_foldername).split(sep="/")[:-1]:
+            local_base += l
+            local_base += "/"
+        gss_base = gss_tree
+        if gss_base[-1] is not "/":
+            gss_base += "/"
+        gss_dirlist =  [d.replace(local_base,gss_base) for d in dirlist]
+        gss_filedict = { f : f.replace(local_base,gss_base) for f in filelist}
+        gss_dirlist.sort()
+        print("Creating remote folders...")
+        for gss_dir in gss_dirlist:
+            self.create_folder(gss_dir, session_token)
+        print("Uploading files...")
+        for local_file, gss_file in gss_filedict.items():
+            print(self.upload(gss_file, session_token, local_file))
+        return
 
 def get_reqmethod(http_method):
     return getattr(requests, http_method.lower())
