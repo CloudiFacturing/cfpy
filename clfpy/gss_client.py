@@ -121,6 +121,55 @@ class GssClient(SoapClient):
 
         return response.text
 
+    def _scan_gss_folder(self, gss_path, session_token):
+        """ Scans a GSS folder returning lists of its files and sub-folders"""
+        subfolders = []
+        files = []
+        content = self.list_files_minimal(gss_path, session_token)
+        for c in content:
+            if 'FOLDER' in c['type']:
+                subfolders.append(c['uniqueName'])
+            if 'FILE' in c['type']:
+                files.append(c['uniqueName'])
+        return subfolders, files
+
+    def _scan_gss_tree(self, gss_tree, session_token):
+        """ Scans recursively a GSS tree returning lists of all its files and sub-folders"""
+        gss_dirlist= [gss_tree]
+        gss_filelist = []
+        scanned_folders = 0
+        while scanned_folders is not len(gss_dirlist):
+            for i in range(scanned_folders, len(gss_dirlist)):
+                print("Scanning {}...".format(gss_dirlist[i]))
+                subfolders, contained_files = self._scan_gss_folder(gss_dirlist[i], session_token)
+                gss_dirlist.extend(subfolders)
+                gss_filelist.extend(contained_files)
+                scanned_folders += 1
+        return gss_dirlist, gss_filelist
+
+    def download_folder(self, gss_tree,session_token, in_foldername="."):
+        """ Downloads from a GSS tree to a folder """
+        gss_dirlist, gss_filelist = self._scan_gss_tree(gss_tree, session_token)
+        gss_base=""
+        for l in gss_tree.split(sep="/")[:-1]:
+            gss_base += l
+            gss_base += "/"
+        local_base = os.path.abspath(in_foldername) + "/"
+        dirlist =  [d.replace(gss_base,local_base) for d in gss_dirlist]
+        filedict = { f : f.replace(gss_base,local_base) for f in gss_filelist}
+        print("Creating local folders...")
+        try:
+            for d in dirlist:
+                print("Creating folder {}".format(d))
+                os.mkdir(d)
+            print("Downloading files...")
+            for gss_file, local_file in filedict.items():
+                print(local_file)
+                self.download_to_file(gss_file, session_token, local_file)
+        except FileExistsError:
+                print("Local file or folder already exists")
+        return
+
 
 def get_reqmethod(http_method):
     return getattr(requests, http_method.lower())
