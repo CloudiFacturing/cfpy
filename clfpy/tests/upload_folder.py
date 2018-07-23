@@ -17,10 +17,6 @@ Usage: update_folder FOLDER DESTINATION
 import os
 import os.path
 import sys
-#### horrible workaround to find the modified version of gss client
-#### has to be changed whnen testin locally
-sys.path.insert(0, '/home/leo/cfg/clfpy')
-#### end of the horrible workaround, remove when clfpy is upgraded
 import clfpy as cf
 
 auth_url = "https://api.hetcomp.org/authManager/AuthManager?wsdl"
