@@ -1,13 +1,13 @@
 from setuptools import setup
 
 setup(name='clfpy',
-      version='0.5.1',
+      version='0.6.0',
       description='Library for accessing infrastructure services in CloudFlow and its derivatives',
       url='https://github.com/CloudiFacturing/clfpy',
       author='Robert Schittny',
       author_email='robert.schittny@sintef.no',
       classifiers=[
-          'Development Status :: 4 - Beta',
+          'Development Status :: 5 - Production/Stable',
           'Programming Language :: Python :: 2.7',
           'Programming Language :: Python :: 3',
       ],
