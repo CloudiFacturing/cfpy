@@ -95,11 +95,22 @@ class GssClient(SoapClient):
                           req_desc):
         """Utility function for general upload"""
         headers = {h.key: h.value for h in req_desc.headers}
-        headers["Content-Length"] = "%d" % os.stat(in_filename).st_size
+        file_size = os.stat(in_filename).st_size
+        headers["Content-Length"] = "%d" % file_size
 
-        with open(in_filename, "rb") as in_file:
-            method = get_reqmethod(req_desc.httpMethod)
-            response = method(req_desc.url, headers=headers, data=in_file)
+        # WORKAROUND!
+        # The requests library cannot handle file descriptors of empty files.
+        # Therefore, we replace the file descriptor with an empty string if the
+        # file is empty.
+        # Should be fixed in requests 3.x.x, details here:
+        # https://github.com/requests/requests/issues/4215
+
+        method = get_reqmethod(req_desc.httpMethod)
+        if file_size == 0:
+            response = method(req_desc.url, headers=headers, data='')
+        else:
+            with open(in_filename, "rb") as in_file:
+                response = method(req_desc.url, headers=headers, data=in_file)
 
         if res_info.queryForName:
             return response.headers["filename"]
