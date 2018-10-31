@@ -5,8 +5,8 @@ interaction with GSS (file upload, download, etc.) as easy and hassle-free as
 possible.
 
 ## Changelog
-###2018-10-31: Version 0.7
-* Bugfix: Uploading an empty file fails
+###2018-10-31: Version 0.6.1
+* (PATCH) Bugfix: Uploading an empty file fails
 
 ## Implemented clients
 Currently, the following clients are available:
