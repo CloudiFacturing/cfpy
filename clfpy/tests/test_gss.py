@@ -54,12 +54,14 @@ print("Deleting downloaded file ...")
 os.remove('./test_gss_downloaded.py')
 
 print("\nTesting upload of an empty file")
-subprocess.run('touch empty_file', shell=True)
+fname = "./empty_file"
+with open(fname, 'a'):
+    os.utime(fname, None)
 gss_ID= "it4i_anselm://home/empty_file"
 print("{} existing?".format(gss_ID))
 print(gss.contains_file(gss_ID, session_token))
 print("Uploading")
-gss.upload(gss_ID, session_token, 'empty_file')
+gss.upload(gss_ID, session_token, fname)
 print("{} existing?".format(gss_ID))
 print(gss.contains_file(gss_ID, session_token))
 print("Deleting")

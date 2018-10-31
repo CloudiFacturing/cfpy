@@ -5,6 +5,9 @@ interaction with GSS (file upload, download, etc.) as easy and hassle-free as
 possible.
 
 ## Changelog
+###2018-10-31: Version 0.6.2
+* (PATCH) Bugfix: GSS test script fails with Python 2.7
+
 ###2018-10-31: Version 0.6.1
 * (PATCH) Bugfix: Uploading an empty file fails
 
