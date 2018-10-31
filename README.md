@@ -4,6 +4,10 @@ in CloudFlow and its derivatives. The library aims to make things like
 interaction with GSS (file upload, download, etc.) as easy and hassle-free as
 possible.
 
+## Changelog
+###2018-10-31: Version 0.7
+* Bugfix: Uploading an empty file fails
+
 ## Implemented clients
 Currently, the following clients are available:
 * `clfpy.AuthClient`: Client for the authentication manager
