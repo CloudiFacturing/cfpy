@@ -36,3 +36,17 @@ pip install clfpy
 ## How to use
 Have a look at the `clfpy/tests/` folder to find examples on how to use the
 library.
+
+## Development
+### How to upload a new version to PyPi
+1. Make changes to the code
+2. Run test scripts with Python 2.7 _and_ Python 3.x.
+3. Update the changelog and choose a new version number using semantic
+   versioning.
+4. Update the version number in `setup.py`.
+5. Remove all files from `./dist` to avoid attempting to overwrite existing
+   files when uploading.
+6. Run `python setup.py sdist bdist_wheel` and check the resulting files in
+   `./dist`.
+7. Run `python setup.py sdist bdist_wheel upload` to upload to PyPi.
+   Note that this step requires a correctly configured `~/.pypirc` file.
