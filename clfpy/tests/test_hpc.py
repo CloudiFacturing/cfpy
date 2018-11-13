@@ -8,9 +8,16 @@ import clfpy as cf
 auth_url = "https://api.hetcomp.org/authManager/AuthManager?wsdl"
 hpc_url = "https://api.hetcomp.org/hpc_anselm/Images?wsdl"
 gss_url = "https://api.hetcomp.org/gss-0.1/FileUtilities?wsdl"
-username = "???"
-project = 'cloudifacturing'
-password = "???"
+
+try:
+    username = os.environ['CFG_USERNAME']
+    password = os.environ['CFG_PASSWORD']
+    project = os.environ['CFG_PROJECT']
+except KeyError:
+    print("CFG_USERNAME, CFG_PASSWORD or CFG_PROJECT environment variables \
+must be defined.")
+    exit(-1)
+
 
 print("Obtaining session token ...")
 auth = cf.AuthClient(auth_url)
