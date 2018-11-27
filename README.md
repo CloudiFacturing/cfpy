@@ -52,5 +52,5 @@ library.
    files when uploading.
 6. Run `python setup.py sdist bdist_wheel` and check the resulting files in
    `./dist`.
-7. Run `python setup.py sdist bdist_wheel upload` to upload to PyPi.
+7. Run `twine upload dist/*` to upload to PyPi.
    Note that this step requires a correctly configured `~/.pypirc` file.
