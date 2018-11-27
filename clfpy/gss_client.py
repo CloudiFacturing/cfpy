@@ -1,5 +1,8 @@
+# -*- coding: utf-8 -*-
 """Lightweight SOAP client to communicate with GSS"""
 import os
+import sys
+import time
 import requests
 
 from clfpy import SoapClient
@@ -53,7 +56,8 @@ class GssClient(SoapClient):
         return self.method_call('getDirectInteractionEndpoint',
                                 [gss_ID, session_token])
 
-    def download_to_file(self, gss_ID, session_token, out_filename):
+    def download_to_file(self, gss_ID, session_token, out_filename,
+                         progress=True):
         """Downloads from a GSS ID to a file."""
         res_info = self.get_resource_information(gss_ID, session_token)
         read_desc = res_info.readDescription
@@ -65,11 +69,20 @@ class GssClient(SoapClient):
 
         method = get_reqmethod(read_desc.httpMethod)
         response = method(read_desc.url, headers=headers, stream=True)
+        response_len = int(response.headers["Content-Length"])
+        saved_len = 0
+        start_time = time.time()
         with open(out_filename, 'wb') as out_file:
-            for chunk in response.iter_content(chunk_size=128):
+            for chunk in response.iter_content(chunk_size=256):
                 out_file.write(chunk)
+                saved_len += len(chunk)
+                time_elapsed = time.time() - start_time
+                speed = saved_len/1000/time_elapsed
+                if progress:
+                    print_progress(saved_len, response_len, prefix="DL:",
+                                   suffix="{:.1f} kB/s".format(speed))
 
-    def upload(self, gss_ID, session_token, in_filename):
+    def upload(self, gss_ID, session_token, in_filename, progress=True):
         """Uploads from a file to a new, nonexisting GSS ID."""
         res_info = self.get_resource_information(gss_ID, session_token)
         create_desc = res_info.createDescription
@@ -78,9 +91,9 @@ class GssClient(SoapClient):
             raise AttributeError('Create operation not allowed')
 
         return self._create_or_update(gss_ID, session_token, in_filename,
-                                      res_info, create_desc)
+                                      res_info, create_desc, progress)
 
-    def update(self, gss_ID, session_token, in_filename):
+    def update(self, gss_ID, session_token, in_filename, progress=True):
         """Updates an existing GSS ID from a file."""
         res_info = self.get_resource_information(gss_ID, session_token)
         update_desc = res_info.updateDescription
@@ -89,10 +102,10 @@ class GssClient(SoapClient):
             raise AttributeError('Update operation not allowed')
 
         return self._create_or_update(gss_ID, session_token, in_filename,
-                                      res_info, update_desc)
+                                      res_info, update_desc, progress)
 
     def _create_or_update(self, gss_ID, session_token, in_filename, res_info,
-                          req_desc):
+                          req_desc, progress=True):
         """Utility function for general upload"""
         headers = {h.key: h.value for h in req_desc.headers}
         file_size = os.stat(in_filename).st_size
@@ -110,7 +123,12 @@ class GssClient(SoapClient):
             response = method(req_desc.url, headers=headers, data='')
         else:
             with open(in_filename, "rb") as in_file:
-                response = method(req_desc.url, headers=headers, data=in_file)
+                if progress:
+                    data_in = ReadProgress(in_file, file_size,
+                                           print_progress)
+                else:
+                    data_in = in_file
+                response = method(req_desc.url, headers=headers, data=data_in)
 
         if res_info.queryForName:
             return response.headers["filename"]
@@ -208,3 +226,55 @@ class GssClient(SoapClient):
 
 def get_reqmethod(http_method):
     return getattr(requests, http_method.lower())
+
+
+def print_progress(iteration, total, prefix='', suffix=''):
+    """
+    Call in a loop to create terminal progress bar
+
+    Adapted from:
+    https://gist.github.com/aubricus/f91fb55dc6ba5557fbab06119420dd6a#file-print_progress-py
+
+    Args:
+        iteration   - Required  : current iteration (Int)
+        total       - Required  : total iterations (Int)
+        prefix      - Optional  : prefix string (Str)
+        suffix      - Optional  : suffix string (Str)
+    """
+    decimals = 1
+    bar_length = 100
+    str_format = "{0:." + str(decimals) + "f}"
+    percents = str_format.format(100 * (iteration / float(total)))
+    filled_length = int(round(bar_length * iteration / float(total)))
+    bar = '█' * filled_length + '-' * (bar_length - filled_length)
+
+    sys.stdout.write('\r%s |%s| %s%s %s' % (prefix, bar, percents, '%',
+        suffix)),
+
+    if iteration == total:
+        sys.stdout.write('\n')
+    sys.stdout.flush()
+
+
+class ReadProgress(object):
+    """File-like object with a progress bar for read operations"""
+
+    def __init__(self, flo, flo_size, callback):
+        self._len = flo_size
+        self._read_len = 0
+        self._io = flo
+        self._callback = callback
+        self._start_time = time.time()
+
+    def __len__(self):
+        return self._len
+
+    def read(self, *args):
+        chunk = self._io.read(*args)
+        if len(chunk) > 0:
+            self._read_len += len(chunk)
+            time_elapsed = time.time() - self._start_time
+            speed = self._read_len/1000/time_elapsed
+            print_progress(self._read_len, self._len, prefix="UL:",
+                           suffix="{:.1f} kB/s".format(speed))
+        return chunk

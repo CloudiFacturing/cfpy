@@ -28,7 +28,11 @@ def timeit_context(name):
 def timed_upload_and_download(tk, filename, gss_ID):
     print("Starting timed upload")
     with timeit_context("Upload {}".format(filename)):
-        gss_ID = gss.upload(gss_ID, tk, filename)
+        try:
+            gss_ID = gss.upload(gss_ID, tk, filename)
+        except AttributeError:
+            print("Attribute error, trying update instead of upload")
+            gss_ID = gss.update(gss_ID, tk, filename)
 
     print("Starting timed download")
     while True:
@@ -54,9 +58,11 @@ file_sizes = [1, 5, 10, 20, 50]
 filepath = "/tmp/tempfile.bin"
 
 for file_size in file_sizes:
-    create_random_file(filepath, 1024*1024*file_size)
 
     print('\n### Testing with file size {} MB'.format(file_size))
+
+    print('Creating random file')
+    create_random_file(filepath, 1024*1024*file_size)
 
     print('Test 1: Anselm cluster')
     gss_ID = "it4i_anselm://home/temp.bin"
