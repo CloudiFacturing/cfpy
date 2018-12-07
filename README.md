@@ -5,6 +5,10 @@ interaction with GSS (file upload, download, etc.) as easy and hassle-free as
 possible.
 
 ## Changelog
+### 2018-12-07: Version 0.8.1
+* (PATCH) `clfpy.ServicesClient`: Added health description in case of unhealthy
+  targets.
+
 ### 2018-12-07: Version 0.8.0
 * (MINOR) New client `clfpy.ServicesClient` for automatic service deployment in
   CloudFlow

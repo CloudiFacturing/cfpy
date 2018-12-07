@@ -111,7 +111,12 @@ class ServicesClient():
         print('Health-check status codes: {}'.format(t_health['status_codes']))
         targets = t_health['targets']
         for i, t in enumerate(targets):
-            print('Target {}/{}: {}, Port: {}, Health: {}'.format(i+1, len(targets), t['target'], t['port'], t['health']))
+            if 'description' in t:
+                print('Target {}/{}: {}, Port: {}, Health: {}, Description: {}'.format(
+                    i+1, len(targets), t['target'], t['port'], t['health'], t['description']))
+            else:
+                print('Target {}/{}: {}, Port: {}, Health: {}'.format(
+                    i+1, len(targets), t['target'], t['port'], t['health']))
 
     def get_service_logs(self, session_token, service_name, tail=20, streams=1):
         """Returns a service's logs as a Python dict"""
