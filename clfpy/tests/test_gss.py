@@ -1,7 +1,6 @@
 """Ugly but working hard-coded test script for the GSS client"""
 import os
 import filecmp
-import subprocess
 
 import clfpy as cf
 
@@ -9,17 +8,10 @@ auth_url = "https://api.hetcomp.org/authManager/AuthManager?wsdl"
 gss_url = "https://api.hetcomp.org/gss-0.1/FileUtilities?wsdl"
 
 try:
-    username = os.environ['CFG_USERNAME']
-    password = os.environ['CFG_PASSWORD']
-    project = os.environ['CFG_PROJECT']
+    session_token = os.environ['CFG_TOKEN']
 except KeyError:
-    print("CFG_USERNAME, CFG_PASSWORD or CFG_PROJECT environment variables \
-must be defined.")
+    print("CFG_TOKEN environment variable must be defined.")
     exit(-1)
-
-print("Obtaining session token ...")
-auth = cf.AuthClient(auth_url)
-session_token = auth.get_session_token(username, project, password)
 
 print('\n### Tests on IT4I cluster storage ###')
 print("Querying resource information for it4i_anselm://home ...")
@@ -57,7 +49,7 @@ print("\nTesting upload of an empty file")
 fname = "./empty_file"
 with open(fname, 'a'):
     os.utime(fname, None)
-gss_ID= "it4i_anselm://home/empty_file"
+gss_ID = "it4i_anselm://home/empty_file"
 print("{} existing?".format(gss_ID))
 print(gss.contains_file(gss_ID, session_token))
 print("Uploading")

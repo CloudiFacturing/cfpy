@@ -1,13 +1,10 @@
 """Tests the upload time for GSS"""
 import os
 import time
-import filecmp
-import subprocess
 from contextlib import contextmanager
 
 import clfpy as cf
 
-auth_url = "https://api.hetcomp.org/authManager/AuthManager?wsdl"
 gss_url = "https://api.hetcomp.org/gss-0.1/FileUtilities?wsdl"
 
 try:
@@ -15,6 +12,7 @@ try:
 except KeyError:
     print("CFG_TOKEN environment variable must be defined.")
     exit(-1)
+
 
 @contextmanager
 def timeit_context(name):
@@ -48,9 +46,11 @@ def timed_upload_and_download(tk, filename, gss_ID):
     os.remove(filename + '.bak')
     gss.delete(gss_ID, tk)
 
+
 def create_random_file(filepath, size):
     with open(filepath, 'wb') as fout:
         fout.write(os.urandom(size))
+
 
 gss = cf.GssClient(gss_url)
 

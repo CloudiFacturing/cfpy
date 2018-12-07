@@ -6,7 +6,7 @@ import json
 import clfpy as cf
 
 auth_url = "https://api.hetcomp.org/authManager/AuthManager?wsdl"
-hpc_url = "https://api.hetcomp.org/hpc_anselm/Images?wsdl"
+hpc_url = "https://api.hetcomp.org/hpc-4-anselm/Images?wsdl"
 gss_url = "https://api.hetcomp.org/gss-0.1/FileUtilities?wsdl"
 
 try:
@@ -30,15 +30,15 @@ images = hpc.list_images(session_token)
 print(images)
 
 print("Uploading and registering a new image")
-# 1: Create a random file
+# 1: Create a random file (10 MB)
 image_filepath = '/tmp/temp_image.simg'
 with open(image_filepath, 'wb') as fout:
-    fout.write(os.urandom(1024))
+    fout.write(os.urandom(1024*1000*10))
 
 # 2: Upload the file to GSS
 gss = cf.GssClient(gss_url)
 gss_ID = "it4i_anselm://home/temp_image.simg"
-print(gss.upload(gss_ID, session_token, image_filepath))
+gss_ID = gss.upload(gss_ID, session_token, image_filepath)
 
 # 3: Register the image
 print(hpc.register_image(session_token, 'temp_image.simg', gss_ID))
