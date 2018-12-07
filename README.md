@@ -5,6 +5,11 @@ interaction with GSS (file upload, download, etc.) as easy and hassle-free as
 possible.
 
 ## Changelog
+### 2018-12-07: Version 0.8.0
+* (MINOR) New client `clfpy.ServicesClient` for automatic service deployment in
+  CloudFlow
+* (PATCH) Fixed HPC endpoint in `test_hpy.py`
+
 ### 2018-11-27: Version 0.7.0
 * (MINOR) File upload and download now shows a status bar and the average speed
   by default.
@@ -27,9 +32,14 @@ Currently, the following clients are available:
   CloudFlow HPC client
 * `clfpy.WfmClient`: Client for interacting with the workflow manager (does not
   yet expose the full WFM functionality)
+* `clfpy.ServicesClient`: Client for automatic service deployment. _Requires
+  Docker to be installed!_
 
 ## Requirements
 Requires Python 2.7 or Python 3.x.
+
+For the `clfpy.ServicesClient`, Docker must be installed as well and the 
+Docker CLI must be available under the `docker` command.
 
 ## Installation
 `clfpy` can be installed from the Python Package Index using pip:
