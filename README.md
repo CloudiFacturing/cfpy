@@ -5,6 +5,10 @@ interaction with GSS (file upload, download, etc.) as easy and hassle-free as
 possible.
 
 ## Changelog
+### 2018-12-10: Version 0.9.0
+* (MINOR) Added convenience function `clfpy.ServicesClient.read_env_file()` for
+  reading environment-definition files when defining services.
+
 ### 2018-12-07: Version 0.8.1
 * (PATCH) `clfpy.ServicesClient`: Added health description in case of unhealthy
   targets.
