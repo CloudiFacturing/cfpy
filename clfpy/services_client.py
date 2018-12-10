@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Lightweight REST client to communicate with servicectl"""
 import os
+import re
 import requests
 from subprocess import Popen, PIPE
 
@@ -226,6 +227,22 @@ class ServicesClient():
             headers=self._make_auth_header(session_token),
         )
         return r.json()
+
+    def read_env_file(self, filepath):
+        """Reads an environment-variable file and returns the vars as a dict."""
+        with open(filepath) as f:
+            s = f.read()
+
+        # Regular expression which matches strings that
+        # - do NOT start with '#' (excludes comments)
+        # - contain '=' with at least 1 character before and
+        # - 0 or more characters behind
+        e = '^(?!#)(.+)=(.*)'
+
+        m = re.findall(e, s, re.MULTILINE)
+        env_vars = [{'name': pair[0], 'value': pair[1]} for pair in m]
+
+        return env_vars
 
 
 def run_with_output(command):
