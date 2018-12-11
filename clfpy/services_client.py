@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """Lightweight REST client to communicate with servicectl"""
+from __future__ import print_function
 import os
 import re
 import requests

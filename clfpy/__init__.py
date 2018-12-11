@@ -6,3 +6,4 @@ from .auth_client import AuthProjectsClient
 from .hpc_client import HpcImagesClient
 from .wfm_client import WfmClient
 from .services_client import ServicesClient
+from .tools import ExtraParameters

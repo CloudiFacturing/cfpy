@@ -5,6 +5,11 @@ interaction with GSS (file upload, download, etc.) as easy and hassle-free as
 possible.
 
 ## Changelog
+### 2018-12-11: Version 0.10.0
+* (MINOR) Added `clfpy.ExtraParameters` class for parsing extraParameters
+  strings
+* (PATCH) Fixed Python 2.x problem for `clfpy.ServicesClient`.
+
 ### 2018-12-10: Version 0.9.0
 * (MINOR) Added convenience function `clfpy.ServicesClient.read_env_file()` for
   reading environment-definition files when defining services.
@@ -42,6 +47,9 @@ Currently, the following clients are available:
   yet expose the full WFM functionality)
 * `clfpy.ServicesClient`: Client for automatic service deployment. _Requires
   Docker to be installed!_
+
+Furthermore, use `clfpy.ExtraParameters` for parsing extraParameters inputs in
+your services.
 
 ## Requirements
 Requires Python 2.7 or Python 3.x.
