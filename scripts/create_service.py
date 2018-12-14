@@ -2,6 +2,7 @@ import os
 import sys
 from pprint import pprint
 
+sys.path.append(os.path.join(sys.path[0], '..'))
 import clfpy
 
 def main():
