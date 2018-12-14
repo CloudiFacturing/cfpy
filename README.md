@@ -5,6 +5,9 @@ interaction with GSS (file upload, download, etc.) as easy and hassle-free as
 possible.
 
 ## Changelog
+### 2018-12-14: Version 0.10.1
+* (PATH) Added exception handling to `clfpy.ServicesClient`.
+
 ### 2018-12-11: Version 0.10.0
 * (MINOR) Added `clfpy.ExtraParameters` class for parsing extraParameters
   strings

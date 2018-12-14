@@ -7,6 +7,18 @@ import requests
 from subprocess import Popen, PIPE
 
 
+class AuthenticationFailedException(Exception):
+    pass
+
+
+class MethodNotAllowedException(Exception):
+    pass
+
+
+class ServiceNotFoundException(Exception):
+    pass
+
+
 class ServicesClient():
     """Lightweight servicectl REST client
 
@@ -27,6 +39,10 @@ class ServicesClient():
             this_url,
             headers=self._make_auth_header(session_token)
         )
+
+        if r.status_code == 403:
+            raise AuthenticationFailedException("Token validation failed")
+
         return r.json()
 
     def print_service_list(self, session_token):
@@ -62,6 +78,12 @@ class ServicesClient():
             headers=self._make_auth_header(session_token),
             json=payload
         )
+
+        if r.status_code == 403:
+            raise AuthenticationFailedException("Token validation failed")
+        elif r.status_code == 405:
+            raise MethodNotAllowedException(r.json()["Error"])
+
         return r.json()
 
     def get_service_status(self, session_token, service_name):
@@ -71,6 +93,12 @@ class ServicesClient():
             this_url,
             headers=self._make_auth_header(session_token)
         )
+
+        if r.status_code == 403:
+            raise AuthenticationFailedException("Token validation failed")
+        elif r.status_code == 404:
+            raise ServiceNotFoundException(r.json()["Error"])
+
         return r.json()
 
     def print_service_status(self, session_token, service_name):
@@ -129,6 +157,12 @@ class ServicesClient():
             headers=self._make_auth_header(session_token),
             params=params
         )
+
+        if r.status_code == 403:
+            raise AuthenticationFailedException("Token validation failed")
+        elif r.status_code == 404:
+            raise ServiceNotFoundException(r.json()["Error"])
+
         return r.json()
 
     def print_service_logs(self, session_token, service_name, tail=20, streams=1):
@@ -152,6 +186,12 @@ class ServicesClient():
             headers=self._make_auth_header(session_token),
             params=params
         )
+
+        if r.status_code == 403:
+            raise AuthenticationFailedException("Token validation failed")
+        elif r.status_code == 404:
+            raise ServiceNotFoundException(r.json()["Error"])
+
         return r.json()
 
     def build_and_push_docker_image(self, session_token, service_name,
@@ -218,6 +258,12 @@ class ServicesClient():
             headers=self._make_auth_header(session_token),
             json=service_definition
         )
+
+        if r.status_code == 403:
+            raise AuthenticationFailedException("Token validation failed")
+        elif r.status_code == 404:
+            raise ServiceNotFoundException(r.json()["Error"])
+
         return r.json()
 
     def delete_service(self, session_token, service_name):
@@ -227,6 +273,12 @@ class ServicesClient():
             this_url,
             headers=self._make_auth_header(session_token),
         )
+
+        if r.status_code == 403:
+            raise AuthenticationFailedException("Token validation failed")
+        elif r.status_code == 404:
+            raise ServiceNotFoundException(r.json()["Error"])
+
         return r.json()
 
     def read_env_file(self, filepath):

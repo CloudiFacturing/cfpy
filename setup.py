@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='clfpy',
-      version='0.10.0',
+      version='0.10.1',
       description='Library for accessing infrastructure services in CloudFlow and its derivatives',
       url='https://github.com/CloudiFacturing/clfpy',
       author='Robert Schittny',
