@@ -161,6 +161,26 @@ class GssCLI(cmd.Cmd):
         else:
             print("Error: Given path already exists")
 
+    def do_rm(self, rel_path):
+        """Deletes a file or folder. Usage: rm REL_PATH"""
+        try:
+            URI, path = self.make_path_URI(rel_path)
+        except ValueError:
+            print("Error: Illegal path")
+            return
+
+        resinfo = self.gss.get_resource_information(URI, self.session_token)
+        if resinfo.type == "NOTEXIST":
+            print("Error: Path doesn't exist")
+            return
+
+        if resinfo.type == "FOLDER":
+            self.gss.delete_folder(URI, self.session_token)
+            if path == self.folder:
+                self.do_cd('..')
+
+        elif resinfo.type == "FILE":
+            self.gss.delete(URI, self.session_token)
 
 #   def do_cat(self, arg):
 #       """List the content of a file. Usage: cat FILE"""
