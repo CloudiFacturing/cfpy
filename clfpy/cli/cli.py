@@ -3,6 +3,7 @@
 
 import os.path
 import os
+import getpass
 import re
 import subprocess
 import cmd
@@ -37,7 +38,7 @@ class cfg_client:
             print("CFG_USERNAME, CFG_PASSWORD and CFG_PROJECT environment variables \
             are not defined.")
             username = input("Please enter the username: ")
-            password = input("Please enter the password: ")
+            password = getpass.getpass("Please enter the password: ")
             project = input("Please enter the project: ")
         auth = cf.AuthClient(auth_url)
         self._session_token = auth.get_session_token(username, project, password)
