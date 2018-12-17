@@ -134,6 +134,22 @@ class GssCLI(cmd.Cmd):
         else:
             print("Given path is not a folder")
 
+    def do_mkdir(self, rel_path):
+        """Creates a new folder relative to the current folder.
+        Usage: mkdir REL_PATH
+        """
+        try:
+            URI, path = self.make_path_URI(rel_path)
+        except ValueError:
+            print("Illegal path")
+            return
+
+        resinfo = self.gss.get_resource_information(URI, self.session_token)
+        if resinfo.type == "NOTEXIST":
+            # TODO: Check that parent folder exists (GSS should return error!)
+            self.gss.create_folder(URI, self.session_token)
+        else:
+            print("Given path exists, cannot re-create")
 
 
 
