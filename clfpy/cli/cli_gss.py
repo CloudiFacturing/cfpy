@@ -1,14 +1,12 @@
 import cmd
 import readline
 import os
-import getpass
 
 import sys
 sys.path.append("../..")
 
 import clfpy as cf
 
-AUTH_endpoint = "https://api.hetcomp.org/authManager/AuthManager?wsdl"
 GSS_endpoint = "https://api.hetcomp.org/gss-0.1/FileUtilities?wsdl"
 
 GSS_roots = [
@@ -52,39 +50,11 @@ def query_yes_no(question, default="yes"):
 
 class GssCLI(cmd.Cmd):
 
-    def __init__(self, token=None):
+    def __init__(self, token, user, project):
         super(GssCLI, self).__init__()
-        if token is not None:
-            self.session_token = token
-        else:
-            auth = cf.AuthClient(AUTH_endpoint)
-            if "CFG_TOKEN" in os.environ:
-                print("Found environment variable 'CFG_TOKEN'")
-                self.session_token = os.environ["CFG_TOKEN"]
-            else:
-                self.session_token = self.authenticate(auth)
-
-        self.user = auth.get_username(self.session_token)
-        self.project = auth.get_project(self.session_token)
-
-    def authenticate(self, auth):
-        try:
-            username = os.environ['CFG_USERNAME']
-            password = os.environ['CFG_PASSWORD']
-            project = os.environ['CFG_PROJECT']
-            print("Found environment variables for username, password, "
-                  "and token")
-        except KeyError:
-            username = input("Please enter username: ")
-            project = input("Please enter project: ")
-            password = getpass.getpass("Please enter password: ")
-
-        print("Logging in ...")
-        session_token = auth.get_session_token(username, project, password)
-        if "401" in str(session_token):
-            print("Error: Authentication failed")
-            exit()
-        return session_token
+        self.session_token = token
+        self.user = user
+        self.project = project
 
     def preloop(self):
         self.gss = cf.GssClient(GSS_endpoint)
@@ -102,7 +72,7 @@ class GssCLI(cmd.Cmd):
             return f"{self.root}{self.folder}"
 
     def update_prompt(self):
-        self.prompt = (f"\nGSS {self.user}@{self.project}: "
+        self.prompt = (f"\n{self.user}@{self.project} – GSS: "
                        f"{self.get_current_path_URI()}$ ")
 
     def make_path_URI(self, rel_path):
