@@ -16,6 +16,39 @@ GSS_roots = [
         "it4i_salomon://"
 ]
 
+def query_yes_no(question, default="yes"):
+    """Ask a yes/no question via input() and return the answer.
+
+    "question" is a string that is presented to the user.
+    "default" is the presumed answer if the user just hits <Enter>.
+        It must be "yes" (the default), "no" or None (meaning
+        an answer is required of the user).
+
+    The "answer" return value is True for "yes" or False for "no".
+    """
+    valid = {"yes": True, "y": True,
+             "no": False, "n": False}
+    if default is None:
+        prompt = " [y/n] "
+    elif default == "yes":
+        prompt = " [Y/n] "
+    elif default == "no":
+        prompt = " [y/N] "
+    else:
+        raise ValueError("Invalid default answer: '%s'" % default)
+
+    while True:
+        sys.stdout.write(question + prompt)
+        choice = input().lower()
+        if default is not None and choice == '':
+            return valid[default]
+        elif choice in valid:
+            return valid[choice]
+        else:
+            sys.stdout.write("Please respond with 'yes' or 'no' "
+                             "(or 'y' or 'n').\n")
+
+
 class GssCLI(cmd.Cmd):
 
     def __init__(self, token=None):
@@ -228,8 +261,12 @@ class GssCLI(cmd.Cmd):
                 print(f"Error: Folder {URI} exists")
                 return
             elif URI_type == "FILE":
-                print(f"Warning: File {URI} exists, will update")
-                self.gss.update(URI, self.session_token, local_path)
+                overwrite = query_yes_no(f"Warning: File {URI} exists, "
+                    "do you want to overwrite?", "yes")
+                if overwrite:
+                    self.gss.update(URI, self.session_token, local_path)
+                else:
+                    print("Upload cancelled")
             else:
                 print(f"Uploading new file to {URI}")
                 self.gss.upload(URI, self.session_token, local_path)
