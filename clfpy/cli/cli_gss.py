@@ -87,7 +87,7 @@ class GssCLI(cmd.Cmd):
             self.root = storage
             self.update_prompt()
         else:
-            print(f"Unknown storage resource '{storage}'")
+            print(f"Error: Unknown storage resource '{storage}'")
 
     def do_list_storages(self, arg):
         """List available storage locations. Usage: list_storages"""
@@ -98,7 +98,7 @@ class GssCLI(cmd.Cmd):
         try:
             URI, _ = self.make_path_URI(rel_path)
         except ValueError:
-            print("Illegal path")
+            print("Error: Illegal path")
             return
 
         resinfo = self.gss.get_resource_information(URI, self.session_token)
@@ -111,9 +111,9 @@ class GssCLI(cmd.Cmd):
             for fil in sorted(files):
                 print(F'  {fil:<30} FILE')
         elif resinfo.type == "NOTEXIST":
-            print("Folder does not exist")
+            print("Error: Folder does not exist")
         else:
-            print("Given path is not a folder")
+            print("Error: Given path is not a folder")
 
     def do_dir(self, rel_path):
         """List folder contents. Usage: dir [FOLDER]"""
@@ -124,7 +124,7 @@ class GssCLI(cmd.Cmd):
         try:
             URI, path = self.make_path_URI(rel_path)
         except ValueError:
-            print("Illegal path")
+            print("Error: Illegal path")
             return
 
         resinfo = self.gss.get_resource_information(URI, self.session_token)
@@ -132,7 +132,7 @@ class GssCLI(cmd.Cmd):
             self.folder = path
             self.update_prompt()
         else:
-            print("Given path is not a folder")
+            print("Error: Given path is not a folder")
 
     def do_mkdir(self, rel_path):
         """Creates a new folder relative to the current folder.
@@ -141,7 +141,7 @@ class GssCLI(cmd.Cmd):
         try:
             URI, path = self.make_path_URI(rel_path)
         except ValueError:
-            print("Illegal path")
+            print("Error: Illegal path")
             return
 
         # Make sure the parent folder exists
