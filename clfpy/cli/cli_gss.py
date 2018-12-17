@@ -1,10 +1,10 @@
-import sys
-sys.path.append("../..")
-
 import cmd
 import readline
 import os
 import getpass
+
+import sys
+sys.path.append("../..")
 
 import clfpy as cf
 
@@ -15,6 +15,7 @@ GSS_roots = [
         "it4i_anselm://",
         "it4i_salomon://"
 ]
+
 
 def query_yes_no(question, default="yes"):
     """Ask a yes/no question via input() and return the answer.
@@ -71,7 +72,8 @@ class GssCLI(cmd.Cmd):
             username = os.environ['CFG_USERNAME']
             password = os.environ['CFG_PASSWORD']
             project = os.environ['CFG_PROJECT']
-            print("Found environment variables for username, password, and token")
+            print("Found environment variables for username, password, "
+                  "and token")
         except KeyError:
             username = input("Please enter username: ")
             project = input("Please enter project: ")
@@ -100,7 +102,8 @@ class GssCLI(cmd.Cmd):
             return f"{self.root}{self.folder}"
 
     def update_prompt(self):
-        self.prompt = f"\n{self.user}@{self.project}: {self.get_current_path_URI()}$ "
+        self.prompt = (f"\nGSS {self.user}@{self.project}: "
+                       f"{self.get_current_path_URI()}$ ")
 
     def make_path_URI(self, rel_path):
         new_path = os.path.normpath(os.path.join(self.folder, rel_path))
@@ -164,7 +167,8 @@ class GssCLI(cmd.Cmd):
         resinfo = self.gss.get_resource_information(URI, self.session_token)
         if resinfo.type == "FOLDER":
             contents = self.gss.list_files_minimal(URI, self.session_token)
-            folders = [x['visualName'] for x in contents if x['type'] == 'FOLDER']
+            folders = [x['visualName'] for x in contents
+                       if x['type'] == 'FOLDER']
             files = [x['visualName'] for x in contents if x['type'] == 'FILE']
             for fol in sorted(folders):
                 print(F'  {fol:<30} FOLDER')
@@ -262,7 +266,7 @@ class GssCLI(cmd.Cmd):
                 return
             elif URI_type == "FILE":
                 overwrite = query_yes_no(f"Warning: File {URI} exists, "
-                    "do you want to overwrite?", "yes")
+                                         "do you want to overwrite?", "yes")
                 if overwrite:
                     self.gss.update(URI, self.session_token, local_path)
                 else:
