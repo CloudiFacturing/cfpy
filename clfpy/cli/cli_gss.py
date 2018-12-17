@@ -144,13 +144,22 @@ class GssCLI(cmd.Cmd):
             print("Illegal path")
             return
 
+        # Make sure the parent folder exists
+        try:
+            parent_URI, _ = self.make_path_URI(os.path.join(rel_path, '..'))
+        except ValueError:
+            print("Error: Parent folder must exist")
+            return
+        resinfo_parent = self.gss.get_resource_information(parent_URI, self.session_token)
+        if not resinfo_parent.type == "FOLDER":
+            print("Error: Parent folder must exist")
+            return
+
         resinfo = self.gss.get_resource_information(URI, self.session_token)
         if resinfo.type == "NOTEXIST":
-            # TODO: Check that parent folder exists (GSS should return error!)
             self.gss.create_folder(URI, self.session_token)
         else:
-            print("Given path exists, cannot re-create")
-
+            print("Error: Given path already exists")
 
 
 #   def do_cat(self, arg):
