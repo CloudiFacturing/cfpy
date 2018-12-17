@@ -40,6 +40,8 @@ class cfg_client:
             username = input("Please enter the username: ")
             password = getpass.getpass("Please enter the password: ")
             project = input("Please enter the project: ")
+        self._user = username
+        self._project = project
         auth = cf.AuthClient(auth_url)
         self._session_token = auth.get_session_token(username, project, password)
         if "Server raised fault" in str(auth.get_token_info(self._session_token)):
@@ -102,9 +104,9 @@ class cfg_client:
             print(F'Folder {os.path.basename(uri)} uploaded.')
         return
 
-    def current(self):
-        """Return current path."""
-        return self._root + self._folder
+    def get_current_path_URI(self):
+        """Return current path URI."""
+        return f"{self._root}{self._folder}"
 
     def cdir(self, folder):
         """Change current folder."""
@@ -246,21 +248,25 @@ class cfg_client:
 class CmdLine(cmd.Cmd):
     """Class to handle command line interface."""
 
-    intro = 'Welcome to CFG command line client.'
-    prompt = '(it4i_anselm://home) : '
-    file = None
-    client = cfg_client()
+    def preloop(self):
+        self.intro = 'Welcome to CFG command line client.'
+        self.file = None
+        self.client = cfg_client()
+        self.update_prompt()
+
+    def update_prompt(self):
+        self.prompt = f"{self.client._user}@{self.client._project}: {self.client.get_current_path_URI()}$ "
 
     def do_cd(self, arg):
         """Change current folder. Usage: cd FOLDER"""
         self.client.cdir(arg)
-        self.prompt = F'({self.client.current()}) : '
+        self.update_prompt()
         return
 
     def do_croot(self, arg):
         """Change the current remote resource. Usage: croot RESOURCE"""
         self.client.croot(arg)
-        self.prompt = F'({self.client.current()}) : '
+        self.update_prompt()
         return
 
     def do_list(self, arg):
@@ -278,7 +284,7 @@ class CmdLine(cmd.Cmd):
     def do_del(self, arg):
         """Create a resource. Usage: del RES"""
         self.client.delete(arg)
-        self.prompt = F'({self.client.current()}) : '
+        self.update_prompt()
 
     def do_up(self, arg):
         """Upload a resource. Usage: up RES"""
