@@ -4,6 +4,7 @@ sys.path.append("../..")
 import cmd
 import readline
 import os
+import getpass
 
 import clfpy as cf
 
@@ -17,25 +18,46 @@ GSS_roots = [
 
 class GssCLI(cmd.Cmd):
 
-    def authenticate(self, auth_url):
+    def __init__(self, token=None):
+        super(GssCLI, self).__init__()
+        if token is not None:
+            self.session_token = token
+        else:
+            auth = cf.AuthClient(AUTH_endpoint)
+            if "CFG_TOKEN" in os.environ:
+                print("Found environment variable 'CFG_TOKEN'")
+                self.session_token = os.environ["CFG_TOKEN"]
+            else:
+                self.session_token = self.authenticate(auth)
+
+        self.user = auth.get_username(self.session_token)
+        self.project = auth.get_project(self.session_token)
+
+    def authenticate(self, auth):
         try:
             username = os.environ['CFG_USERNAME']
             password = os.environ['CFG_PASSWORD']
             project = os.environ['CFG_PROJECT']
+            print("Found environment variables for username, password, and token")
         except KeyError:
-            print("CFG_USERNAME, CFG_PASSWORD and CFG_PROJECT environment variables \
-            are not defined.")
             username = input("Please enter username: ")
             project = input("Please enter project: ")
             password = getpass.getpass("Please enter password: ")
 
-        self.user = username
-        self.project = project
-        auth = cf.AuthClient(auth_url)
-        self.session_token = auth.get_session_token(username, project, password)
-        if "Server raised fault" in str(auth.get_token_info(self.session_token)):
-            print("Authentication failed")
+        print("Logging in ...")
+        session_token = auth.get_session_token(username, project, password)
+        if "401" in str(session_token):
+            print("Error: Authentication failed")
             exit()
+        return session_token
+
+    def preloop(self):
+        self.gss = cf.GssClient(GSS_endpoint)
+        self.root = GSS_roots[0]
+        self.folder = '.'
+        self.update_prompt()
+
+        self.intro = 'Welcome to the CloudFlow command line client.'
 
     def get_current_path_URI(self):
         """Return current path URI."""
@@ -46,16 +68,6 @@ class GssCLI(cmd.Cmd):
 
     def update_prompt(self):
         self.prompt = f"\n{self.user}@{self.project}: {self.get_current_path_URI()}$ "
-
-    def preloop(self):
-        self.authenticate(AUTH_endpoint)
-
-        self.gss = cf.GssClient(GSS_endpoint)
-        self.root = GSS_roots[0]
-        self.folder = '.'
-        self.update_prompt()
-
-        self.intro = 'Welcome to the CloudFlow command line client.'
 
     def make_path_URI(self, rel_path):
         new_path = os.path.normpath(os.path.join(self.folder, rel_path))
