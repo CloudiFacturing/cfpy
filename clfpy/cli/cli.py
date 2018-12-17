@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """Command-line client for CFG platform"""
 
+import sys
+sys.path.append("../..")
+
 import os.path
 import os
 import getpass
@@ -24,9 +27,9 @@ class cfg_client:
     _hpc = ""
     _root = ""
     _folder = ""
-    _roots = ["it4i_anselm:/", "it4i_salomon:/"]
-    _hpcs = {"it4i_anselm:/": "https://api.hetcomp.org/hpc-4-anselm/Images?wsdl",
-             "it4i_salomon:/": "https://api.hetcomp.org/hpc-4-salomon/Images?wsdl"}
+    _roots = ["it4i_anselm://", "it4i_salomon://"]
+    _hpcs = {"it4i_anselm://": "https://api.hetcomp.org/hpc-4-anselm/Images?wsdl",
+             "it4i_salomon://": "https://api.hetcomp.org/hpc-4-salomon/Images?wsdl"}
 
     def __init__(self):
         """Initialize the client."""
@@ -45,11 +48,11 @@ class cfg_client:
         auth = cf.AuthClient(auth_url)
         self._session_token = auth.get_session_token(username, project, password)
         if "Server raised fault" in str(auth.get_token_info(self._session_token)):
-            print("Autentication failed")
+            print("Authentication failed")
             exit()
         self._gss = cf.GssClient(gss_url)
-        self._root = "it4i_anselm:/"
-        self._folder = "/home"
+        self._root = "it4i_anselm://"
+        self._folder = "home"
         self._hpc = cf.HpcImagesClient(self._hpcs[self._root])
         return
 
@@ -79,7 +82,7 @@ class cfg_client:
             return current_path + "/" + folder  # subfolder
 
     def _remove_root(self, path):
-        return re.sub(r'^\S+:/', '', path)
+        return re.sub(r'^\S+://', '', path)
 
     def _upload_file(self, uri):
         path = self._path(self._folder + "/" + os.path.basename(uri))
