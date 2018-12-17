@@ -67,6 +67,21 @@ class GssCLI(cmd.Cmd):
         else:
             return os.path.join(self.root, new_path), new_path
 
+    def isfile(self, URI):
+        resinfo = self.gss.get_resource_information(URI, self.session_token)
+        return resinfo.type == "FILE"
+
+    def isfolder(self, URI):
+        resinfo = self.gss.get_resource_information(URI, self.session_token)
+        return resinfo.type == "FOLDER"
+
+    def exists(self, URI):
+        return self.gss.contains_file(URI, self.session_token)
+
+    def get_type(self, URI):
+        resinfo = self.gss.get_resource_information(URI, self.session_token)
+        return resinfo.type
+
     def do_shell(self, arg):
         """Execute a shell command. Usage: shell CMD"""
         os.system(arg)
@@ -127,8 +142,7 @@ class GssCLI(cmd.Cmd):
             print("Error: Illegal path")
             return
 
-        resinfo = self.gss.get_resource_information(URI, self.session_token)
-        if resinfo.type == "FOLDER":
+        if self.isfolder(URI):
             self.folder = path
             self.update_prompt()
         else:
@@ -150,13 +164,11 @@ class GssCLI(cmd.Cmd):
         except ValueError:
             print("Error: Parent folder must exist")
             return
-        resinfo_parent = self.gss.get_resource_information(parent_URI, self.session_token)
-        if not resinfo_parent.type == "FOLDER":
+        if not self.isfolder(parent_URI):
             print("Error: Parent folder must exist")
             return
 
-        resinfo = self.gss.get_resource_information(URI, self.session_token)
-        if resinfo.type == "NOTEXIST":
+        if not self.exists(URI):
             self.gss.create_folder(URI, self.session_token)
         else:
             print("Error: Given path already exists")
@@ -176,11 +188,34 @@ class GssCLI(cmd.Cmd):
 
         if resinfo.type == "FOLDER":
             self.gss.delete_folder(URI, self.session_token)
+            print(f"Removed folder {URI}")
             if path == self.folder:
                 self.do_cd('..')
 
         elif resinfo.type == "FILE":
+            print(f"Removed file {URI}")
             self.gss.delete(URI, self.session_token)
+
+    def do_ul(self, local_path):
+        """Upload a file or folder. Usage: ul LOCAL_PATH"""
+        if os.path.isfile(local_path):
+            filename = os.path.basename(local_path)
+            URI, path = self.make_path_URI(filename)
+            URI_type = self.get_type(URI)
+            if URI_type == "FOLDER":
+                print(f"Error: Folder {URI} exists")
+                return
+            elif URI_type == "FILE":
+                print(f"Warning: File {URI} exists, will update")
+                self.gss.update(URI, self.session_token, local_path)
+            else:
+                print(f"Uploading new file to {URI}")
+                self.gss.upload(URI, self.session_token, local_path)
+
+        elif os.path.isdir(local_path):
+            print("Folder upload not available")
+        else:
+            print(F'Local file or folder {local_path} not found.')
 
 #   def do_cat(self, arg):
 #       """List the content of a file. Usage: cat FILE"""
