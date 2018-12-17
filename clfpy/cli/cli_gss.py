@@ -62,7 +62,8 @@ class GssCLI(cmd.Cmd):
         self.folder = '.'
         self.update_prompt()
 
-        self.intro = 'Welcome to the CloudFlow command line client.'
+        self.intro = ("This is the CloudFlow GSS client. "
+                      "Enter 'help' for more info.")
 
     def get_current_path_URI(self):
         """Return current path URI."""

@@ -9,10 +9,12 @@ sys.path.append("../..")
 import clfpy as cf
 
 from cli_gss import GssCLI
+from cli_services import ServicesCLI
 
 AUTH_endpoint = "https://api.hetcomp.org/authManager/AuthManager?wsdl"
 CLIENTS = {
-    "GSS": GssCLI
+    "gss": GssCLI,
+    "services": ServicesCLI
 }
 
 
@@ -61,7 +63,7 @@ class CLI(cmd.Cmd):
         self.prompt = (f"\n{self.user}@{self.project}: ")
 
     def do_client(self, client_ID):
-        if client_ID not in CLIENTS:
+        if client_ID.lower() not in CLIENTS:
             print(f"Unknown client ID {client_ID}")
         else:
             client = CLIENTS[client_ID](self.session_token, self.user,
