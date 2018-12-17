@@ -268,57 +268,6 @@ class GssCLI(cmd.Cmd):
         else:
             print(f"Error: URI {URI} not found.")
 
-#   def do_cat(self, arg):
-#       """List the content of a file. Usage: cat FILE"""
-#       self.client.cat(arg)
-
-#   def do_mkdir(self, arg):
-#       """Create a folder. Usage: mkdir FOLDER"""
-#       self.client.mkdir(arg)
-
-#   def do_del(self, arg):
-#       """Create a resource. Usage: del RES"""
-#       self.client.delete(arg)
-#       self.update_prompt()
-
-#   def do_up(self, arg):
-#       """Upload a resource. Usage: up RES"""
-#       self.client.upload(arg)
-
-#   def do_down(self, arg):
-#       """Download a resource. Usage: down RES"""
-#       self.client.download(arg)
-
-#   def do_img_reg(self, arg):
-#       """Register an image. Usage: img_reg PATH NAME"""
-#       if len(arg.split()) == 2:
-#           self.client.img_register(arg.split()[0], arg.split()[1])
-
-#   def do_img_list(self, arg):
-#       """List registered images. Usage: img_list"""
-#       self.client.img_list()
-
-#   def do_img_del(self, arg):
-#       """Unregister an image. Usage: img_del NAME"""
-#       self.client.img_delete(arg)
-
-#   def do_clear(self, arg):
-#       """Clear the screen."""
-#       subprocess.run('clear', shell=True)
-
-#   def do_shell(self, arg):
-#       """Execute shell command. Usage shell CMD"""
-#       os.system(arg)
-
-#   def do_exit(self, arg):
-#       """Exit the application."""
-#       print('Goodbye')
-#       return True
-
-#   def do_EOF(self, arg):
-#       """Exit the application."""
-#       print('Goodbye')
-#       return True
 
 if __name__ == '__main__':
     GssCLI().cmdloop()
