@@ -273,6 +273,14 @@ class CmdLine(cmd.Cmd):
         """List the content of a folder. Usage: list FOLDER"""
         self.client.list(arg)
 
+    def do_ls(self, arg):
+        """List the content of a folder. Usage: ls FOLDER"""
+        self.client.list(arg)
+
+    def do_dir(self, arg):
+        """List the content of a folder. Usage: dir FOLDER"""
+        self.client.list(arg)
+
     def do_cat(self, arg):
         """List the content of a file. Usage: cat FILE"""
         self.client.cat(arg)
@@ -320,6 +328,10 @@ class CmdLine(cmd.Cmd):
         print('Goodbye')
         return True
 
+    def do_EOF(self, arg):
+        """Exit the application."""
+        print('Goodbye')
+        return True
 
 if __name__ == '__main__':
     CmdLine().cmdloop()
