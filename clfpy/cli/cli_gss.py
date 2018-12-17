@@ -56,7 +56,6 @@ class GssCLI(cmd.Cmd):
         self.update_prompt()
 
         self.intro = 'Welcome to the CloudFlow command line client.'
-        self.file = None
 
     def make_path_URI(self, rel_path):
         new_path = os.path.normpath(os.path.join(self.folder, rel_path))
@@ -197,11 +196,21 @@ class GssCLI(cmd.Cmd):
             print(f"Removed file {URI}")
             self.gss.delete(URI, self.session_token)
 
-    def do_ul(self, local_path):
-        """Upload a file or folder. Usage: ul LOCAL_PATH"""
+    def do_ul(self, args):
+        """Upload a file or folder. Usage: ul LOCAL_PATH [REMOTE_FILENAME]"""
+        arglist = args.split()
+        if len(arglist) == 1:
+            local_path = arglist[0]
+            remote_filename = os.path.basename(local_path)
+        elif len(arglist) == 2:
+            local_path = arglist[0]
+            remote_filename = arglist[1]
+        else:
+            print("Error: Too many arguments.")
+            return
+
         if os.path.isfile(local_path):
-            filename = os.path.basename(local_path)
-            URI, path = self.make_path_URI(filename)
+            URI, path = self.make_path_URI(remote_filename)
             URI_type = self.get_type(URI)
             if URI_type == "FOLDER":
                 print(f"Error: Folder {URI} exists")
