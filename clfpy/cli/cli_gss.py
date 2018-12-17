@@ -2,6 +2,7 @@ import sys
 sys.path.append("../..")
 
 import cmd
+import readline
 import os
 
 import clfpy as cf
