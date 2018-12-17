@@ -227,6 +227,35 @@ class GssCLI(cmd.Cmd):
         else:
             print(F'Local file or folder {local_path} not found.')
 
+    def do_dl(self, args):
+        """Download a file or folder. Usage: dl REMOTE_NAME [LOCAL_PATH]"""
+        arglist = args.split()
+        if len(arglist) == 1:
+            remote_filename = arglist[0]
+            local_path = os.path.basename(remote_filename)
+        elif len(arglist) == 2:
+            remote_filename = arglist[0]
+            local_path = arglist[1]
+        else:
+            print("Error: Too many arguments.")
+            return
+
+        try:
+            URI, path = self.make_path_URI(remote_filename)
+        except ValueError:
+            print("Error: Illegal path")
+            return
+
+        URI_type = self.get_type(URI)
+
+        if URI_type == "FILE":
+            print(f"Downloading {URI} to {local_path}")
+            self.gss.download_to_file(URI, self.session_token, local_path)
+        elif URI_type == "FOLDER":
+            print("Folder download not available")
+        else:
+            print(f"Error: URI {URI} not found.")
+
 #   def do_cat(self, arg):
 #       """List the content of a file. Usage: cat FILE"""
 #       self.client.cat(arg)
