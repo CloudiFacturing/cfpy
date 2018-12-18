@@ -63,12 +63,18 @@ class CLI(cmd.Cmd):
         self.prompt = (f"\n{self.user}@{self.project}: ")
 
     def do_client(self, client_ID):
+        """Select a client. Usage: client CLIENT_NAME"""
         if client_ID.lower() not in CLIENTS:
             print(f"Unknown client ID {client_ID}")
         else:
             client = CLIENTS[client_ID](self.session_token, self.user,
                                         self.project)
             client.cmdloop()
+
+    def complete_client(self, text, line, begidx, endidx):
+        candidates = list(CLIENTS.keys())
+        matches = [c for c in candidates if c.startswith(text)]
+        return matches
 
     def do_shell(self, arg):
         """Execute a shell command. Usage: shell CMD"""
