@@ -104,6 +104,10 @@ class ServicesCLI(cmd.Cmd):
 
         print(f"Service {name} removed")
 
+    do_rm = do_remove
+    def help_rm(self):
+        print("(Same as 'remove') Remove a service and all its resources. Usage: rm NAME")
+
     def do_status(self, service):
         """Show status for a service. Usage: status SERVICE"""
         self.srv.print_service_status(self.session_token, service)
