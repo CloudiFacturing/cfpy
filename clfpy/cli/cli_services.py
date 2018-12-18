@@ -75,7 +75,7 @@ class ServicesCLI(cmd.Cmd):
 
         try:
             res = self.srv.create_new_service(self.session_token, name)
-        except cf.MethodNotAllowedException as err:
+        except (cf.MethodNotAllowedException, cf.BadRequestException) as err:
             print(f"Error: {err}")
             return
 
