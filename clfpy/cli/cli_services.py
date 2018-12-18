@@ -7,7 +7,7 @@ sys.path.append("../..")
 
 import clfpy as cf
 
-from cli_tools import query_yes_no
+from cli_tools import query_yes_no, query_int, query_filepath
 
 SERVICES_endpoint = "https://api.hetcomp.org/servicectl-1"
 
@@ -186,6 +186,56 @@ class ServicesCLI(cmd.Cmd):
 
     complete_push_docker_image = name_completion
 
+    def do_update(self, name):
+        """Update an existing service. Usage: update NAME"""
+        if len(name.split()) > 1:
+            print("Error: Too many arguments")
+            return
+        if name == "":
+            print("Error: No service name given")
+            return
+
+        try:
+            status = self.srv.get_service_status(self.session_token, name)["status"]
+        except cf.ServiceNotFoundException:
+            print(f"Error: Service {name} doesn't exist")
+            return
+
+        create_new_taskdef = True
+        mem_res = 50
+        mem_lim = 75
+        port = 80
+        if len(status['tasks']) > 0:
+            task = status['tasks'][0]
+            taskdef = task['task_definition']
+            mem_res = int(taskdef['container_memory_reservation'])
+            mem_lim = int(taskdef['container_memory_limit'])
+            port = int(taskdef['container_port'])
+            print("Found the following existing service definition:")
+            print(f"  Memory reservation: {mem_res} MB")
+            print(f"  Memory limit: {mem_lim} MB")
+            print(f"  Container port: {port}")
+            create_new_taskdef = query_yes_no("Do you want to create a new service definition?", "no")
+
+        if create_new_taskdef:
+            mem_res = query_int("Enter memory reservation (MB)", mem_res)
+            mem_lim = query_int("Enter memory limit (MB)", mem_lim)
+            port = query_int("Enter container port", port)
+
+        env_path = query_filepath("Enter path to environment-definition file")
+        env = self.srv.read_env_file(env_path)
+
+        service_def = {
+            'container-tag': 'latest',
+            'memory-reservation': mem_res,
+            'memory-limit': mem_lim,
+            'container-port': port,
+            'environment': env
+        }
+
+        self.srv.update_service(self.session_token, name, service_def)
+
+    complete_update = name_completion
 
 if __name__ == '__main__':
     ServicesCLI().cmdloop()
