@@ -5,6 +5,9 @@ interaction with GSS (file upload, download, etc.) as easy and hassle-free as
 possible.
 
 ## Changelog
+### WIP
+* (PATCH) Added better exception handling to `clfpy.ServicesClient` and `clfpy.HpcImagesClient`
+
 ### 2018-12-14: Version 0.10.1
 * (PATH) Added exception handling to `clfpy.ServicesClient`.
 

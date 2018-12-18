@@ -19,6 +19,10 @@ class ServiceNotFoundException(Exception):
     pass
 
 
+class BadRequestException(Exception):
+    pass
+
+
 class ServicesClient():
     """Lightweight servicectl REST client
 
@@ -83,6 +87,8 @@ class ServicesClient():
             raise AuthenticationFailedException("Token validation failed")
         elif r.status_code == 405:
             raise MethodNotAllowedException(r.json()["Error"])
+        elif r.status_code == 400:
+            raise BadRequestException(r.json()["Error"])
 
         return r.json()
 
