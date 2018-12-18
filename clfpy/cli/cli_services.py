@@ -25,6 +25,7 @@ class ServicesCLI(cmd.Cmd):
     def preloop(self):
         self.srv = cf.ServicesClient(SERVICES_endpoint)
         self.update_prompt()
+        self.make_service_list()
 
         self.intro = ("This is the CloudFlow services client. "
                       "Enter 'help' for more info.")
@@ -56,6 +57,9 @@ class ServicesCLI(cmd.Cmd):
             depl_path = [link['href'] for link in s['links'] if link['rel'] == 'deployment'][0]
             self.last_ls_names.append(name)
             self.last_ls_deplpaths.append(depl_path)
+
+    def name_completion(self, text, line, begidx, endidx):
+        return [n for n in self.last_ls_names if n.startswith(text)]
 
     def do_ls(self, arg):
         """List available services. Usage: ls"""
@@ -117,7 +121,10 @@ class ServicesCLI(cmd.Cmd):
         self.make_service_list()
         print(f"Service {name} removed")
 
+    complete_remove = name_completion
+
     do_rm = do_remove
+    complete_rm = name_completion
     def help_rm(self):
         print("(Same as 'remove') Remove a service and all its resources. Usage: rm NAME")
 
@@ -130,6 +137,8 @@ class ServicesCLI(cmd.Cmd):
             print("Error: Too many arguments")
             return
         self.srv.print_service_status(self.session_token, service)
+
+    complete_status = name_completion
 
     def do_logs(self, arg):
         """Show logs for a service. Usage: logs NAME [N_EVENTS] [N_LOG_STREAMS]"""
@@ -155,6 +164,8 @@ class ServicesCLI(cmd.Cmd):
 
         self.srv.print_service_logs(self.session_token, name, tail, streams)
 
+    complete_logs = name_completion
+
     def do_push_docker_image(self, arg):
         """Build and push a Docker image to a service repo. Usage: push_docker_image NAME DOCKER_SRC_FOLDER"""
         args = arg.split()
@@ -172,6 +183,8 @@ class ServicesCLI(cmd.Cmd):
 
         self.srv.build_and_push_docker_image(self.session_token, name,
             docker_src_folder, creds)
+
+    complete_push_docker_image = name_completion
 
 
 if __name__ == '__main__':
