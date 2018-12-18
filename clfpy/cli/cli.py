@@ -10,11 +10,13 @@ import clfpy as cf
 
 from cli_gss import GssCLI
 from cli_services import ServicesCLI
+from cli_images import ImagesCLI
 
 AUTH_endpoint = "https://api.hetcomp.org/authManager/AuthManager?wsdl"
 CLIENTS = {
     "gss": GssCLI,
-    "services": ServicesCLI
+    "services": ServicesCLI,
+    "images": ImagesCLI,
 }
 
 
