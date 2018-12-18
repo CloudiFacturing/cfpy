@@ -19,6 +19,8 @@ class ServicesCLI(cmd.Cmd):
         self.session_token = token
         self.user = user
         self.project = project
+        self.last_ls_names = []
+        self.last_ls_deplpaths = []
 
     def preloop(self):
         self.srv = cf.ServicesClient(SERVICES_endpoint)
@@ -45,15 +47,24 @@ class ServicesCLI(cmd.Cmd):
         print('Goodbye')
         return True
 
-    def do_ls(self, arg):
-        """List available services. Usage: ls"""
+    def make_service_list(self):
         services = self.srv.list_services(self.session_token)
-        if len(services) == 0:
-            print("No services available in this project")
+        self.last_ls_names = []
+        self.last_ls_deplpaths = []
         for s in services:
             name = s['name']
             depl_path = [link['href'] for link in s['links'] if link['rel'] == 'deployment'][0]
-            print(f"  {name:<30} Deployment URL: {depl_path}")
+            self.last_ls_names.append(name)
+            self.last_ls_deplpaths.append(depl_path)
+
+    def do_ls(self, arg):
+        """List available services. Usage: ls"""
+        self.make_service_list()
+        if len(self.last_ls_names) == 0:
+            print("No services available in this project")
+            return
+        for i, n in enumerate(self.last_ls_names):
+            print(f"  {n:<30} Deployment URL: {self.last_ls_deplpaths[i]}")
 
     def do_create_new(self, name):
         """Create a new service. Usage: create_new NAME"""
@@ -79,6 +90,7 @@ class ServicesCLI(cmd.Cmd):
             print(f"Error: {err}")
             return
 
+        self.make_service_list()
         print(f"Created new service {name}")
 
     def do_remove(self, name):
@@ -102,6 +114,7 @@ class ServicesCLI(cmd.Cmd):
             print(f"Error: Service {name} not found")
             return
 
+        self.make_service_list()
         print(f"Service {name} removed")
 
     do_rm = do_remove
@@ -110,6 +123,12 @@ class ServicesCLI(cmd.Cmd):
 
     def do_status(self, service):
         """Show status for a service. Usage: status SERVICE"""
+        if service == "":
+            print("Error: Service name must be given")
+            return
+        if len(service.split()) > 1:
+            print("Error: Too many arguments")
+            return
         self.srv.print_service_status(self.session_token, service)
 
     def do_logs(self, arg):
