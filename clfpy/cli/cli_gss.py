@@ -8,6 +8,7 @@ sys.path.append("../..")
 import clfpy as cf
 
 from cli_tools import query_yes_no
+from cli_images import ImagesCLI
 
 GSS_endpoint = "https://api.hetcomp.org/gss-0.1/FileUtilities?wsdl"
 
@@ -249,6 +250,48 @@ class GssCLI(cmd.Cmd):
         else:
             print(f"Error: URI {URI} not found.")
 
+    def do_img_ls(self, arg):
+        """List Singularity images registered on the current cluster. Usage: img_ls"""
+        img = ImagesCLI(self.session_token, self.user, self.project, self.root)
+        img.do_ls(arg)
+
+    def do_img_register(self, arg):
+        """Registers a file from the current folder as a Singularity image. Usage: img_register FILENAME"""
+        if arg == "":
+            print("Error: File name must be given")
+            return
+        if len(arg.split()) > 1:
+            print("Error: Too many arguments")
+            return
+
+        rel_path = arg
+        try:
+            URI, path = self.make_path_URI(rel_path)
+        except ValueError:
+            print("Error: Illegal path")
+            return
+
+        resinfo = self.gss.get_resource_information(URI, self.session_token)
+        if not resinfo.type == "FILE":
+            print("Error: File doesn't exist")
+            return
+
+        target_name = os.path.basename(path)
+
+        img = ImagesCLI(self.session_token, self.user, self.project, self.root)
+        if img.exists(target_name):
+            overwrite = query_yes_no(f"Image '{target_name}' already registered. Overwrite?", "yes")
+            if not overwrite:
+                print("Cancelled")
+                return
+            img.do_update(f"{target_name} {URI}")
+        else:
+            img.do_register(f"{URI} {target_name}")
+
+    def do_img_rm(self, arg):
+        """Remove a Singularity images registered on the current cluster. Usage: img_rm NAME"""
+        img = ImagesCLI(self.session_token, self.user, self.project, self.root)
+        img.do_rm(arg)
 
 if __name__ == '__main__':
     GssCLI().cmdloop()

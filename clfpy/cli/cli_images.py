@@ -17,16 +17,16 @@ IMG_endpoints = {
 
 class ImagesCLI(cmd.Cmd):
 
-    def __init__(self, token, user, project):
+    def __init__(self, token, user, project, root="it4i_anselm://"):
         super(ImagesCLI, self).__init__()
         self.session_token = token
         self.user = user
         self.project = project
+        self.root = root
+        self.img = cf.HpcImagesClient(IMG_endpoints[self.root])
 
     def preloop(self):
-        self.root = "it4i_anselm://"
         self.image_list = []
-        self.img = cf.HpcImagesClient(IMG_endpoints[self.root])
         self.make_image_list()
         self.update_prompt()
         self.intro = ("This is the CloudFlow Images client. "
@@ -58,7 +58,7 @@ class ImagesCLI(cmd.Cmd):
             print("Error: Too many arguments")
             return
         if cluster == "":
-            print("Error: No service name given")
+            print("Error: No cluster name given")
             return
         if cluster in IMG_endpoints:
             self.root = cluster
