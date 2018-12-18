@@ -51,7 +51,9 @@ class ServicesCLI(cmd.Cmd):
         if len(services) == 0:
             print("No services available in this project")
         for s in services:
-            print(f"{s['name']}")
+            name = s['name']
+            depl_path = [link['href'] for link in s['links'] if link['rel'] == 'deployment'][0]
+            print(f"  {name:<30} Deployment URL: {depl_path}")
 
     def do_create_new(self, name):
         """Create a new service. Usage: create_new NAME"""
