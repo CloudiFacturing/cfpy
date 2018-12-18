@@ -1,6 +1,7 @@
 import cmd
 import readline
 import os
+import getpass
 
 import sys
 sys.path.append("../..")
@@ -46,6 +47,25 @@ class AuthCLI(cmd.Cmd):
         """Exit the application."""
         print('Goodbye')
         return True
+
+    def do_get_session_token(self, arg):
+        """Obtain a session token. Usage: get_session_token"""
+        if arg != "":
+            print("Error: Too many arguments")
+            return
+
+        username = input("Enter user name: ")
+        project = input("Enter project: ")
+        password = getpass.getpass("Enter password: ")
+
+        res = self.auth_client.get_session_token(username, project, password)
+
+        if "401: Unauthorized" in str(res):
+            print("Error: Login failed")
+            return
+        else:
+            print(res)
+
 
 
 if __name__ == '__main__':

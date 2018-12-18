@@ -35,6 +35,9 @@ class CLI(cmd.Cmd):
 
         self.user = auth.get_username(self.session_token)
         self.project = auth.get_project(self.session_token)
+        if "Couldn't validate token" in str(self.user):
+            print("Token in environment variable CFG_TOKEN is not valid.")
+            exit(1)
 
     def authenticate(self, auth):
         try:
