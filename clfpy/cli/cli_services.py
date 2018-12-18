@@ -112,6 +112,30 @@ class ServicesCLI(cmd.Cmd):
         """Show status for a service. Usage: status SERVICE"""
         self.srv.print_service_status(self.session_token, service)
 
+    def do_logs(self, arg):
+        """Show logs for a service. Usage: logs NAME [N_EVENTS] [N_LOG_STREAMS]"""
+        if arg == "":
+            print("Error: At least a service name must be given")
+            return
+        if len(arg.split()) > 3:
+            print("Error: Too many arguments")
+            return
+
+        args = arg.split()
+        name = args[0]
+        tail = 20
+        streams = 1
+        try:
+            if len(args) > 1:
+                tail = int(args[1])
+            if len(args) > 2:
+                streams = int(args[2])
+        except ValueError:
+            print(f"Error: Arguments after '{name}' must be integers")
+            return
+
+        self.srv.print_service_logs(self.session_token, name, tail, streams)
+
 
 if __name__ == '__main__':
     ServicesCLI().cmdloop()
