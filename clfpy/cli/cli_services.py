@@ -136,6 +136,24 @@ class ServicesCLI(cmd.Cmd):
 
         self.srv.print_service_logs(self.session_token, name, tail, streams)
 
+    def do_push_docker_image(self, arg):
+        """Build and push a Docker image to a service repo. Usage: push_docker_image NAME DOCKER_SRC_FOLDER"""
+        args = arg.split()
+        if len(args) != 2:
+            print(f"Error: Expected 2 arguments, {len(args)} given")
+            return
+        name = args[0]
+        docker_src_folder = args[1]
+
+        try:
+            creds = self.srv.get_docker_credentials(self.session_token, name)
+        except cf.ServiceNotFoundException:
+            print(f"Error: Service '{name}' doesn't exist")
+            return
+
+        self.srv.build_and_push_docker_image(self.session_token, name,
+            docker_src_folder, creds)
+
 
 if __name__ == '__main__':
     ServicesCLI().cmdloop()
