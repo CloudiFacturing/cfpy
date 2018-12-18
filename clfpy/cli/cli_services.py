@@ -46,6 +46,8 @@ class ServicesCLI(cmd.Cmd):
     def do_ls(self, arg):
         """List available services. Usage: ls"""
         services = self.srv.list_services(self.session_token)
+        if len(services) == 0:
+            print("No services available in this project")
         for s in services:
             print(f"{s['name']}")
 
