@@ -1,5 +1,15 @@
 import sys
 import os
+import getpass
+
+
+def query_password(prompt, min_length=12):
+    while True:
+        password = getpass.getpass(prompt)
+        if len(password) < min_length:
+            print(f"Password must be at least {min_length} characters long")
+        else:
+            return password
 
 
 def query_int(question, default=None):
