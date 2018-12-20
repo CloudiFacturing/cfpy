@@ -57,6 +57,9 @@ class AuthUsersClient(SoapClient):
     def __init__(self, wsdl_url):
         super(AuthUsersClient, self).__init__(wsdl_url)
 
+    def list_users(self, token):
+        return self.method_call('listUsers', [token])
+
     def create_user(self, token, username, password, email, description,
                     project_ID):
         return self.method_call('createUser', [token, username, password,

@@ -6,6 +6,7 @@ possible.
 
 ## Changelog
 ### WIP
+* (MINOR) Added missing list_users method to `clfpy.AuthUsersClient`
 * (PATCH) Added better exception handling to `clfpy.ServicesClient` and `clfpy.HpcImagesClient`
 
 ### 2018-12-14: Version 0.10.1
