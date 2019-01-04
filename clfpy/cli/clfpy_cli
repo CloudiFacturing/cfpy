@@ -1,10 +1,9 @@
+#! /usr/bin/env python
 # -*- coding: future_fstrings -*-
 import cmd
 import readline
 import os
 import getpass
-
-import sys
 
 import clfpy as cf
 

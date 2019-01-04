@@ -14,4 +14,5 @@ setup(name='clfpy',
       packages=['clfpy'],
       install_requires=['requests', 'suds_jurko', 'future_fstrings'],
       python_requires='>=2.7, <4',
+      scripts=['cli/clfpy_cli']
 )
