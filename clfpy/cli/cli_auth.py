@@ -4,9 +4,6 @@ import readline
 import os
 import getpass
 
-import sys
-sys.path.append("../..")
-
 import clfpy as cf
 
 from cli_tools import query_password
@@ -32,7 +29,6 @@ class AuthCLI(cmd.Cmd, object):
 
         self.intro = ("This is the CloudFlow authManager client. "
                       "Enter 'help' for more info.")
-
 
     def update_prompt(self):
         self.prompt = (f"\n{self.user}@{self.project} – AUTH: ")
@@ -238,4 +234,3 @@ class AuthCLI(cmd.Cmd, object):
 
 if __name__ == '__main__':
     AuthCLI().cmdloop()
-

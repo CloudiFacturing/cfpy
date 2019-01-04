@@ -3,9 +3,6 @@ import cmd
 import readline
 import os
 
-import sys
-sys.path.append("../..")
-
 import clfpy as cf
 
 from cli_tools import query_yes_no, query_int, query_filepath
@@ -30,7 +27,6 @@ class ServicesCLI(cmd.Cmd, object):
 
         self.intro = ("This is the CloudFlow services client. "
                       "Enter 'help' for more info.")
-
 
     def update_prompt(self):
         self.prompt = (f"\n{self.user}@{self.project} – SERVICES: ")
@@ -126,6 +122,7 @@ class ServicesCLI(cmd.Cmd, object):
 
     do_rm = do_remove
     complete_rm = name_completion
+
     def help_rm(self):
         print("(Same as 'remove') Remove a service and all its resources. Usage: rm NAME")
 
@@ -183,7 +180,7 @@ class ServicesCLI(cmd.Cmd, object):
             return
 
         self.srv.build_and_push_docker_image(self.session_token, name,
-            docker_src_folder, creds)
+                                             docker_src_folder, creds)
 
     complete_push_docker_image = name_completion
 
@@ -238,6 +235,6 @@ class ServicesCLI(cmd.Cmd, object):
 
     complete_update = name_completion
 
+
 if __name__ == '__main__':
     ServicesCLI().cmdloop()
-

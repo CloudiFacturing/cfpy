@@ -3,9 +3,6 @@ import cmd
 import readline
 import os
 
-import sys
-sys.path.append("../..")
-
 import clfpy as cf
 
 from cli_tools import query_yes_no
@@ -168,6 +165,7 @@ class ImagesCLI(cmd.Cmd, object):
         self.make_image_list()
 
     complete_rm = name_completion
+
 
 if __name__ == '__main__':
     ImagesCLI().cmdloop()
