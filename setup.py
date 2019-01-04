@@ -12,6 +12,6 @@ setup(name='clfpy',
           'Programming Language :: Python :: 3',
       ],
       packages=['clfpy'],
-      install_requires=['requests', 'suds_jurko'],
+      install_requires=['requests', 'suds_jurko', 'future_fstrings'],
       python_requires='>=2.7, <4',
 )

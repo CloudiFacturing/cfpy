@@ -1,3 +1,4 @@
+# -*- coding: future_fstrings -*-
 import cmd
 import readline
 import os
@@ -15,7 +16,7 @@ USER_endpoint = "https://api.hetcomp.org/authManager/Users?wsdl"
 PROJ_endpoint = "https://api.hetcomp.org/authManager/Projects?wsdl"
 
 
-class AuthCLI(cmd.Cmd):
+class AuthCLI(cmd.Cmd, object):
 
     def __init__(self, token, user, project):
         super(AuthCLI, self).__init__()

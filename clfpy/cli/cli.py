@@ -1,10 +1,10 @@
+# -*- coding: future_fstrings -*-
 import cmd
 import readline
 import os
 import getpass
 
 import sys
-sys.path.append("../..")
 
 import clfpy as cf
 
@@ -22,7 +22,7 @@ CLIENTS = {
 }
 
 
-class CLI(cmd.Cmd):
+class CLI(cmd.Cmd, object):
 
     def __init__(self):
         super(CLI, self).__init__()

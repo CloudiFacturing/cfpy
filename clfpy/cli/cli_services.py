@@ -1,3 +1,4 @@
+# -*- coding: future_fstrings -*-
 import cmd
 import readline
 import os
@@ -12,7 +13,7 @@ from cli_tools import query_yes_no, query_int, query_filepath
 SERVICES_endpoint = "https://api.hetcomp.org/servicectl-1"
 
 
-class ServicesCLI(cmd.Cmd):
+class ServicesCLI(cmd.Cmd, object):
 
     def __init__(self, token, user, project):
         super(ServicesCLI, self).__init__()

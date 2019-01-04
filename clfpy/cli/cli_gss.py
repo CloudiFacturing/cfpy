@@ -1,3 +1,4 @@
+# -*- coding: future_fstrings -*-
 import cmd
 import readline
 import os
@@ -18,7 +19,7 @@ GSS_roots = [
 ]
 
 
-class GssCLI(cmd.Cmd):
+class GssCLI(cmd.Cmd, object):
 
     def __init__(self, token, user, project):
         super(GssCLI, self).__init__()

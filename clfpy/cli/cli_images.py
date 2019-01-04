@@ -1,3 +1,4 @@
+# -*- coding: future_fstrings -*-
 import cmd
 import readline
 import os
@@ -15,7 +16,7 @@ IMG_endpoints = {
 }
 
 
-class ImagesCLI(cmd.Cmd):
+class ImagesCLI(cmd.Cmd, object):
 
     def __init__(self, token, user, project, root="it4i_anselm://"):
         super(ImagesCLI, self).__init__()
