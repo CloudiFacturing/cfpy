@@ -217,7 +217,23 @@ class GssCLI(cmd.Cmd):
                 self.gss.upload(URI, self.session_token, local_path)
 
         elif os.path.isdir(local_path):
-            print("Folder upload not available")
+            remote_filename = os.path.basename(local_path)
+            URI, path = self.make_path_URI(remote_filename)
+            URI_type = self.get_type(URI)
+            if URI_type == "FOLDER":
+                print(f"Error: Folder {URI} exists")
+                return
+            elif URI_type == "FILE":
+                print(f"Error: File {URI} exists")
+                return
+            else:
+                parent_URI = os.path.dirname(URI)
+                print("Warning: Folder upload is not a core GSS feature. "
+                      "Use at your own risk.")
+                print(f"Uploading folder {local_path} to {URI} "
+                      "(REMOTE_FILENAME is ignored here)")
+                self.gss.upload_folder(parent_URI, self.session_token,
+                                       local_path)
         else:
             print(F'Local file or folder {local_path} not found.')
 
@@ -246,7 +262,10 @@ class GssCLI(cmd.Cmd):
             print(f"Downloading {URI} to {local_path}")
             self.gss.download_to_file(URI, self.session_token, local_path)
         elif URI_type == "FOLDER":
-            print("Folder download not available")
+            print("Warning: Folder download is not a core GSS feature. "
+                  "Use at your own risk")
+            print(f"Downloading folder {URI} (LOCAL_PATH is ignored here)")
+            self.gss.download_folder(URI, self.session_token)
         else:
             print(f"Error: URI {URI} not found.")
 
