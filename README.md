@@ -4,8 +4,18 @@ in CloudFlow and its derivatives. The library aims to make things like
 interaction with GSS (file upload, download, etc.) as easy and hassle-free as
 possible.
 
+## Command-line interface (CLI)
+With version 1.0.0 of the library, a command-line interface was added for fully
+interactive use. Simply install clfpy with pip and then execute `clfpy_cli`
+from any terminal. For more detailed documentation, check the CLI's [readme
+page](./clfpy/cli/README.md).
+
+A big thank you goes to Leonardo Cosma from CETMA who initiated the creation of
+the CLI and also provided some of the code.
+
 ## Changelog
-### WIP
+### 2019-01-??: Version 1.0.0
+* (MAJOR) Added full command-line interface for the library
 * (MINOR) Added missing list_users method to `clfpy.AuthUsersClient`
 * (PATCH) Added better exception handling to `clfpy.ServicesClient` and `clfpy.HpcImagesClient`
 
