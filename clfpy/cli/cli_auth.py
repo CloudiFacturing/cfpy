@@ -5,8 +5,7 @@ import os
 import getpass
 
 import clfpy as cf
-
-from cli_tools import query_password
+from .tools import query_password
 
 AUTH_endpoint = "https://api.hetcomp.org/authManager/AuthManager?wsdl"
 USER_endpoint = "https://api.hetcomp.org/authManager/Users?wsdl"

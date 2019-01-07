@@ -4,9 +4,8 @@ import readline
 import os
 
 import clfpy as cf
-
-from cli_tools import query_yes_no
-from cli_images import ImagesCLI
+from .cli_images import ImagesCLI
+from .tools import query_yes_no
 
 GSS_endpoint = "https://api.hetcomp.org/gss-0.1/FileUtilities?wsdl"
 

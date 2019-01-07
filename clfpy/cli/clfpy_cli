@@ -4,13 +4,10 @@ import cmd
 import readline
 import os
 import getpass
+from builtins import input
 
 import clfpy as cf
-
-from cli_gss import GssCLI
-from cli_services import ServicesCLI
-from cli_images import ImagesCLI
-from cli_auth import AuthCLI
+from clfpy.cli import GssCLI, ServicesCLI, ImagesCLI, AuthCLI
 
 AUTH_endpoint = "https://api.hetcomp.org/authManager/AuthManager?wsdl"
 CLIENTS = {

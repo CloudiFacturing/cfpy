@@ -4,8 +4,7 @@ import readline
 import os
 
 import clfpy as cf
-
-from cli_tools import query_yes_no, query_int, query_filepath
+from .tools import query_yes_no, query_int, query_filepath
 
 SERVICES_endpoint = "https://api.hetcomp.org/servicectl-1"
 

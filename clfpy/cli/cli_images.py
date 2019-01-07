@@ -4,8 +4,7 @@ import readline
 import os
 
 import clfpy as cf
-
-from cli_tools import query_yes_no
+from .tools import query_yes_no
 
 IMG_endpoints = {
         "it4i_anselm://": "https://api.hetcomp.org/hpc-4-anselm/Images?wsdl",
