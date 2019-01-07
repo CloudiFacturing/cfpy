@@ -1,7 +1,7 @@
-from setuptools import setup
+import setuptools
 
-setup(name='clfpy',
-      version='0.10.1',
+setuptools.setup(name='clfpy',
+      version='1.0.0',
       description='Library for accessing infrastructure services in CloudFlow and its derivatives',
       url='https://github.com/CloudiFacturing/clfpy',
       author='Robert Schittny',
@@ -11,7 +11,8 @@ setup(name='clfpy',
           'Programming Language :: Python :: 2.7',
           'Programming Language :: Python :: 3',
       ],
-      packages=['clfpy'],
-      install_requires=['requests', 'suds_jurko'],
+      packages=setuptools.find_packages(),
+      install_requires=['requests', 'suds_jurko', 'future', 'future_fstrings'],
       python_requires='>=2.7, <4',
+      scripts=['clfpy/cli/clfpy_cli']
 )
