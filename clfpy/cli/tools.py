@@ -2,6 +2,7 @@
 import sys
 import os
 import getpass
+from builtins import input
 
 
 def query_password(prompt, min_length=12):

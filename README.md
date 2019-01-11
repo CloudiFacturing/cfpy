@@ -14,6 +14,9 @@ A big thank you goes to Leonardo Cosma from CETMA who initiated the creation of
 the CLI and also provided some of the code.
 
 ## Changelog
+### 2019-01-97: Version 1.0.1
+* (PATCH) Fixed broken input for Python 2.7
+
 ### 2019-01-07: Version 1.0.0
 * (MAJOR) Added full command-line interface for the library
 * (MINOR) Added missing list_users method to `clfpy.AuthUsersClient`

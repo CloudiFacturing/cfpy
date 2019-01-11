@@ -3,6 +3,7 @@ import cmd
 import readline
 import os
 import getpass
+from builtins import input
 
 import clfpy as cf
 from .tools import query_password
