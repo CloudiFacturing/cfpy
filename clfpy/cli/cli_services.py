@@ -27,6 +27,18 @@ class ServicesCLI(cmd.Cmd, object):
         self.intro = ("This is the CloudFlow services client. "
                       "Enter 'help' for more info.")
 
+    def completenames(self, text, *ignored):
+        """Overrides the original method for command completion.
+
+        Adds a space to the matches if there is only one match, which results
+        in a smoother experience.
+        """
+        dotext = 'do_'+text
+        matches = [a[3:] for a in self.get_names() if a.startswith(dotext)]
+        if len(matches) == 1:
+            matches[0] += ' '
+        return matches
+
     def update_prompt(self):
         self.prompt = (f"\n{self.user}@{self.project} – SERVICES: ")
 
@@ -55,7 +67,10 @@ class ServicesCLI(cmd.Cmd, object):
             self.last_ls_deplpaths.append(depl_path)
 
     def name_completion(self, text, line, begidx, endidx):
-        return [n for n in self.last_ls_names if n.startswith(text)]
+        matches = [n for n in self.last_ls_names if n.startswith(text)]
+        if len(matches) == 1:
+            matches[0] += ' '
+        return matches
 
     def do_ls(self, arg):
         """List available services. Usage: ls"""

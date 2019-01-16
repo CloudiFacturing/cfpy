@@ -32,6 +32,18 @@ class GssCLI(cmd.Cmd, object):
         self.intro = ("This is the CloudFlow GSS client. "
                       "Enter 'help' for more info.")
 
+    def completenames(self, text, *ignored):
+        """Overrides the original method for command completion.
+
+        Adds a space to the matches if there is only one match, which results
+        in a smoother experience.
+        """
+        dotext = 'do_'+text
+        matches = [a[3:] for a in self.get_names() if a.startswith(dotext)]
+        if len(matches) == 1:
+            matches[0] += ' '
+        return matches
+
     def get_current_path_URI(self):
         """Return current path URI."""
         if self.folder == '.':

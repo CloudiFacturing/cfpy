@@ -78,3 +78,10 @@ explore the in-built help to discover the fully set of commands.
 * `status`: Get a service's status
 * `logs`: Get a service's logs
 * `rm` or `remove`: Remove a service
+
+### Client `auth`: Authentication and user management
+* `get_session_token`: Obtain a session token (== log into the platform)
+* `token_info`: Show information connected to the current session token
+* `validate_token <token>`: Check if the given token is valid
+* `change_password`: Change the password of the currently logged-in user
+* `update_email`: Set a new email address for the currently logged-in user

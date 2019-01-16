@@ -62,6 +62,18 @@ class CLI(cmd.Cmd, object):
                       "\nChoose a client by typing 'client CLIENT' "
                       f"({list(CLIENTS.keys())} available)")
 
+    def completenames(self, text, *ignored):
+        """Overrides the original method for command completion.
+
+        Adds a space to the matches if there is only one match, which results
+        in a smoother experience.
+        """
+        dotext = 'do_'+text
+        matches = [a[3:] for a in self.get_names() if a.startswith(dotext)]
+        if len(matches) == 1:
+            matches[0] += ' '
+        return matches
+
     def update_prompt(self):
         self.prompt = (f"\n{self.user}@{self.project}: ")
 
@@ -77,6 +89,8 @@ class CLI(cmd.Cmd, object):
     def complete_client(self, text, line, begidx, endidx):
         candidates = list(CLIENTS.keys())
         matches = [c for c in candidates if c.startswith(text)]
+        if len(matches) == 1:
+            matches[0] += ' '
         return matches
 
     def do_shell(self, arg):

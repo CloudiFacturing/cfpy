@@ -29,11 +29,26 @@ class ImagesCLI(cmd.Cmd, object):
         self.intro = ("This is the CloudFlow Images client. "
                       "Enter 'help' for more info.")
 
+    def completenames(self, text, *ignored):
+        """Overrides the original method for command completion.
+
+        Adds a space to the matches if there is only one match, which results
+        in a smoother experience.
+        """
+        dotext = 'do_'+text
+        matches = [a[3:] for a in self.get_names() if a.startswith(dotext)]
+        if len(matches) == 1:
+            matches[0] += ' '
+        return matches
+
     def update_prompt(self):
         self.prompt = (f"\n{self.user}@{self.project} – IMAGES: {self.root}$ ")
 
     def name_completion(self, text, line, begidx, endidx):
-        return [n for n in self.image_names if n.startswith(text)]
+        matches = [n for n in self.image_names if n.startswith(text)]
+        if len(matches) == 1:
+            matches[0] += ' '
+        return matches
 
     def do_shell(self, arg):
         """Execute a shell command. Usage: shell CMD"""
@@ -65,7 +80,10 @@ class ImagesCLI(cmd.Cmd, object):
             print(f"Error: Unknown cluster '{cluster}'")
 
     def complete_set_cluster(self, text, line, begidx, endidx):
-        return [c for c in IMG_endpoints.keys() if c.startswith(text)]
+        matches = [c for c in IMG_endpoints.keys() if c.startswith(text)]
+        if len(matches) == 1:
+            matches[0] += ' '
+        return matches
 
     def do_list_clusters(self, arg):
         """List available clusters. Usage: list_clusters"""

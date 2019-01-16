@@ -14,7 +14,11 @@ A big thank you goes to Leonardo Cosma from CETMA who initiated the creation of
 the CLI and also provided some of the code.
 
 ## Changelog
-### 2019-01-97: Version 1.0.1
+### 2019-01-16: Version 1.1.0
+* (MINOR) Added missing methods to CLI auth client
+* (MINOR) Improved tab completion in the CLI
+
+### 2019-01-07: Version 1.0.1
 * (PATCH) Fixed broken input for Python 2.7
 
 ### 2019-01-07: Version 1.0.0
