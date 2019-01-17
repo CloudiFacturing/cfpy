@@ -14,6 +14,9 @@ A big thank you goes to Leonardo Cosma from CETMA who initiated the creation of
 the CLI and also provided some of the code.
 
 ## Changelog
+### 2019-01-17: Version 1.1.1
+* (PATCH) Fix CLI tab completion for service names
+
 ### 2019-01-16: Version 1.1.0
 * (MINOR) Added missing methods to CLI auth client
 * (MINOR) Improved tab completion in the CLI

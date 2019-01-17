@@ -1,4 +1,5 @@
 # -*- coding: future_fstrings -*-
+from __future__ import print_function
 import cmd
 import readline
 import os
@@ -67,7 +68,22 @@ class ServicesCLI(cmd.Cmd, object):
             self.last_ls_deplpaths.append(depl_path)
 
     def name_completion(self, text, line, begidx, endidx):
-        matches = [n for n in self.last_ls_names if n.startswith(text)]
+        """Implements completion of service names.
+
+        This algorithm makes sure that completion works also when a partial
+        name is already typed and more than one service beginning with that
+        partial name exists.
+        """
+        parts = line.split(' ', 1)
+        if len(parts) > 1 and parts[1] != '':
+            if text == '':
+                prefix = parts[1]
+            else:
+                prefix = parts[1][:-len(text)]
+            candidates = [n[len(prefix):] for n in self.last_ls_names if n.startswith(prefix)]
+        else:
+            candidates = self.last_ls_names
+        matches = [n for n in candidates if n.startswith(text)]
         if len(matches) == 1:
             matches[0] += ' '
         return matches
