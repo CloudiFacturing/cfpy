@@ -3,8 +3,9 @@
 import os
 import sys
 import time
-import requests
+from pathlib import Path
 
+import requests
 from clfpy import SoapClient
 
 
@@ -179,13 +180,13 @@ class GssClient(SoapClient):
     def download_folder(self, gss_tree,session_token, in_foldername="."):
         """ Downloads from a GSS tree to a folder """
         gss_dirlist, gss_filelist = self._scan_gss_tree(gss_tree, session_token)
-        gss_base=""
+        gss_base = ""
         for l in gss_tree.split(sep="/")[:-1]:
             gss_base += l
             gss_base += "/"
-        local_base = os.path.abspath(in_foldername) + "/"
-        dirlist =  [d.replace(gss_base,local_base) for d in gss_dirlist]
-        filedict = { f : f.replace(gss_base,local_base) for f in gss_filelist}
+        local_base = Path(in_foldername)
+        dirlist = [local_base / Path(d.replace(gss_base, '')) for d in gss_dirlist]
+        filedict = {f: local_base / Path(f.replace(gss_base, '')) for f in gss_filelist}
         print("Creating local folders...")
         try:
             for d in dirlist:
@@ -196,7 +197,7 @@ class GssClient(SoapClient):
                 print(local_file)
                 self.download_to_file(gss_file, session_token, local_file)
         except FileExistsError:
-                print("Local file or folder already exists")
+            print("Local file or folder already exists")
         return
 
     def upload_folder(self, gss_tree, session_token, in_foldername):
@@ -205,16 +206,10 @@ class GssClient(SoapClient):
                 for dir in dirs]
         filelist = [os.path.join(root,file) for root,__,files in os.walk(os.path.abspath(in_foldername))
                 for file in files]
-        dirlist.append(os.path.abspath(in_foldername))
-        local_base = ""
-        for l in os.path.abspath(in_foldername).split(sep="/")[:-1]:
-            local_base += l
-            local_base += "/"
+        local_base = os.path.abspath(in_foldername)
         gss_base = gss_tree
-        if gss_base[-1] is not "/":
-            gss_base += "/"
-        gss_dirlist =  [d.replace(local_base,gss_base) for d in dirlist]
-        gss_filedict = { f : f.replace(local_base,gss_base) for f in filelist}
+        gss_dirlist = [d.replace(local_base, gss_base).replace(os.path.sep, '/') for d in dirlist]
+        gss_filedict = {f: f.replace(local_base, gss_base).replace(os.path.sep, '/') for f in filelist}
         gss_dirlist.sort()
         print("Creating remote folders...")
         for gss_dir in gss_dirlist:
