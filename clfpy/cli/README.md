@@ -13,7 +13,7 @@ $ clfpy_cli
 ```
 
 ## Logging in
-The clfpy CLI needs valid user credentials to access the CloudFlow platform.
+The clfpy CLI needs valid user credentials to access the SemWES platform.
 You can provide these credentials in three different ways:
 
 1. Interactive login: If you simply start the CLI, you will be asked for

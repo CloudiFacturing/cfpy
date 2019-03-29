@@ -1,8 +1,8 @@
-# `clfpy` – Python library for accessing infrastructure services in CloudFlow and its derivatives
+# `clfpy` – Python library for accessing platform services of the SemWES platform
 This is a simple Python library that offers access to infrastructure services
-in CloudFlow and its derivatives. The library aims to make things like
-interaction with GSS (file upload, download, etc.) as easy and hassle-free as
-possible.
+in SemWES (formerly CloudFlow) and its derivatives. The library aims to make
+things like interaction with GSS (file upload, download, etc.) as easy and
+hassle-free as possible.
 
 ## Command-line interface (CLI)
 With version 1.0.0 of the library, a command-line interface was added for fully
@@ -14,6 +14,9 @@ A big thank you goes to Leonardo Cosma from CETMA who initiated the creation of
 the CLI and also provided some of the code.
 
 ## Changelog
+### 2019-03-29: Version 1.1.2
+* (PATCH) Re-brand CloudFlow to SemWES
+
 ### 2019-01-17: Version 1.1.1
 * (PATCH) Fix CLI tab completion for service names
 
