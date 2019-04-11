@@ -19,8 +19,8 @@ You can provide these credentials in three different ways:
 1. Interactive login: If you simply start the CLI, you will be asked for
    username, project, and password.
 2. Credentials in environment variables: The clfpy CLI will check if the three
-   environment variables `CFG_USER`, `CFG_PROJECT`, and `CFG_PASSWORD` are set.
-   If yes, it will skip the interactive login and use the values of these
+   environment variables `CFG_USERNAME`, `CFG_PROJECT`, and `CFG_PASSWORD` are
+   set.  If yes, it will skip the interactive login and use the values of these
    variables instead.
 3. Session token in environment variables: If you already have a session token,
    you can store it in the `CFG_TOKEN` environment variable. The clfpy CLI will
