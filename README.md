@@ -14,6 +14,9 @@ A big thank you goes to Leonardo Cosma from CETMA who initiated the creation of
 the CLI and also provided some of the code.
 
 ## Changelog
+### 2019-04-24: Version 1.1.3
+* (PATCH) Fix bad hardcoded interpreter in clfpy_cli script
+
 ### 2019-03-29: Version 1.1.2
 * (PATCH) Re-brand CloudFlow to SemWES
 
@@ -104,8 +107,8 @@ library.
 3. Update the changelog and choose a new version number using semantic
    versioning.
 4. Update the version number in `setup.py`.
-5. Remove all files from `./dist` to avoid attempting to overwrite existing
-   files when uploading.
+5. Remove all files from `./dist` and `./build` to avoid attempting to
+   overwrite existing files when uploading.
 6. Run `python setup.py sdist bdist_wheel` and check the resulting files in
    `./dist`.
 7. Run `twine upload dist/*` to upload to PyPi.
