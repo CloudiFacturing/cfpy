@@ -10,6 +10,7 @@ from .tools import query_yes_no
 GSS_endpoint = "https://api.hetcomp.org/gss-0.1/FileUtilities?wsdl"
 
 GSS_roots = [
+        "it4i_barbora://"
         "it4i_anselm://",
         "it4i_salomon://"
 ]

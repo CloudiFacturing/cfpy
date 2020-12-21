@@ -7,6 +7,7 @@ import clfpy as cf
 from .tools import query_yes_no
 
 IMG_endpoints = {
+        "it4i_barbora://": "https://api.hetcomp.org/hpc-4-barbora/Images?wsdl",
         "it4i_anselm://": "https://api.hetcomp.org/hpc-4-anselm/Images?wsdl",
         "it4i_salomon://": "https://api.hetcomp.org/hpc-4-salomon/Images?wsdl"
 }
