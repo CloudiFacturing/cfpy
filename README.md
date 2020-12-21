@@ -14,6 +14,9 @@ A big thank you goes to Leonardo Cosma from CETMA who initiated the creation of
 the CLI and also provided some of the code.
 
 ## Changelog
+### 2020-10-12: Version 1.2.0
+* (MINOR) Added method to services client to pull a Docker image
+
 ### 2019-04-24: Version 1.1.3
 * (PATCH) Fix bad hardcoded interpreter in clfpy_cli script
 

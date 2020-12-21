@@ -236,6 +236,36 @@ class ServicesClient():
             run_with_output(['docker', 'logout', proxy_endpoint])
             os.chdir(this_dir)
 
+    def pull_docker_image(self, session_token, service_name, docker_credentials, tag='latest'):
+        """Pulls a service's Docker image from its repository"""
+
+        repo_uri = docker_credentials['repo_uri']
+        user = docker_credentials['user']
+        password = docker_credentials['password']
+        proxy_endpoint = docker_credentials['proxy_endpoint']
+
+        try:
+            print('Logging into Docker repository')
+            run_with_output(['docker', 'login', '-u', user, '-p', password,
+                            proxy_endpoint])
+
+            tag_local = '{}:{}'.format(service_name, tag)
+            tag_remote = '{}:{}'.format(repo_uri, tag)
+
+            print('Pulling image')
+            run_with_output(['docker', 'pull', tag_remote])
+
+            print('Tagging local image')
+            run_with_output(['docker', 'tag', tag_remote, tag_local])
+        except Exception as error:
+            print(str(error))
+            print("Something went wrong, aborting.")
+
+        finally:
+            print('Logging out of the docker registry')
+            run_with_output(['docker', 'logout', proxy_endpoint])
+
+
     def update_service(self, session_token, service_name, service_definition):
         """Updates a service to use the given service definition
 

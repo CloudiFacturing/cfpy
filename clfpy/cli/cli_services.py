@@ -214,6 +214,24 @@ class ServicesCLI(cmd.Cmd, object):
 
     complete_push_docker_image = name_completion
 
+    def do_pull_docker_image(self, arg):
+        """Pulls a service's Docker image. Usage: pull_docker_image NAME"""
+        args = arg.split()
+        if len(args) != 1:
+            print(f"Error: Expected 1 argument, {len(args)} given")
+            return
+        name = args[0]
+
+        try:
+            creds = self.srv.get_docker_credentials(self.session_token, name)
+        except cf.ServiceNotFoundException:
+            print(f"Error: Service '{name}' doesn't exist")
+            return
+
+        self.srv.pull_docker_image(self.session_token, name, creds)
+
+    complete_pull_docker_image = name_completion
+
     def do_update(self, name):
         """Update an existing service. Usage: update NAME"""
         if len(name.split()) > 1:

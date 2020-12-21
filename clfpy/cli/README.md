@@ -74,6 +74,7 @@ explore the in-built help to discover the fully set of commands.
 * `ls`: List currently registered services
 * `create_new`: Create a new service
 * `push_docker_image`: Push a docker image for a service
+* `pull_docker_image`: Pull a service's image from its registry
 * `update`: Update a service
 * `status`: Get a service's status
 * `logs`: Get a service's logs
