@@ -1,7 +1,7 @@
 import setuptools
 
 setuptools.setup(name='clfpy',
-      version='1.3.1',
+      version='1.3.2',
       description='Library for accessing infrastructure services in SemWES and its derivatives',
       url='https://github.com/CloudiFacturing/clfpy',
       author='Robert Schittny',

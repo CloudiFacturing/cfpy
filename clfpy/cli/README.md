@@ -57,7 +57,7 @@ explore the in-built help to discover the fully set of commands.
 * `ul <path>`: Upload a file
 * `mkdir <folder>`: Create a directory
 * `rm <path>`: Remove a file or folder
-* `list_storages`: List available storages (such as `it4i_anselm://`)
+* `list_storages`: List available storages (such as `it4i_barbora://`)
 * `set_storage <storage_identifier>`: Change storage
 * `img_ls`: List Singularity images registered for the current cluster
 * `img_register <file>`: Directly register a file as a Singularity image

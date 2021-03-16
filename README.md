@@ -14,6 +14,9 @@ A big thank you goes to Leonardo Cosma from CETMA who initiated the creation of
 the CLI and also provided some of the code.
 
 ## Changelog
+### 2021-03-16: Version 1.3.2
+* (BUGFIX) Removed Anselm and Salomon support, fixing broken images client.
+
 ### 2020-12-21: Version 1.3.1
 * (BUGFIX) Fixed Barbora support
 
